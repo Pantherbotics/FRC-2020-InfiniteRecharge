@@ -12,8 +12,10 @@ import edu.wpi.first.wpilibj.Notifier;
 import edu.wpi.first.wpilibj.DoubleSolenoid.Value;
 import edu.wpi.first.wpilibj.geometry.Pose2d;
 import edu.wpi.first.wpilibj.geometry.Rotation2d;
+import edu.wpi.first.wpilibj.kinematics.DifferentialDriveWheelSpeeds;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.Constants;
+import frc.robot.util.Units;
 
 public class Drivetrain extends SubsystemBase {
 
@@ -78,6 +80,11 @@ public class Drivetrain extends SubsystemBase {
         mLeftA.set(nyoom - zoom);
         mRightA.set(-nyoom - zoom);
     }
+
+    public void setPower(double zoom, double nyoom) {
+        mLeftA.setVoltage(12 * (nyoom - zoom));
+        mRightA.setVoltage(12 * (-nyoom - zoom));
+    }
     
     //Ramsete
     public void ramseteInput(Double left, Double right) {
@@ -87,6 +94,11 @@ public class Drivetrain extends SubsystemBase {
 
     public Pose2d getPose() {
         return new Pose2d(x, y, Rotation2d.fromDegrees(getBoundAngle()));
+    }
+
+    public DifferentialDriveWheelSpeeds getWheelSpeeds() {
+        return new DifferentialDriveWheelSpeeds(Units.rpm2MPS(leftEncoder.getVelocity()),
+                                                Units.rpm2MPS(rightEncoder.getVelocity()));
     }
 
     //PTO Shifter
