@@ -25,7 +25,8 @@ public class Shooter extends SubsystemBase {
     private CANSparkMax mShootB = new CANSparkMax(Constants.shootBID, MotorType.kBrushless);
     private TalonSRX mKick = new TalonSRX(Constants.kickID);
 
-    private CANEncoder shootEncoder = new CANEncoder(mShootA, EncoderType.kQuadrature, 1);
+    private CANEncoder shootEncoder = mShootA.getEncoder(EncoderType.kHallSensor, 1);
+    //private CANEncoder BEncoder = mShootB.getEncoder(EncoderType.kHallSensor, 1);
 
     private int timeoutMs = 0;
 
@@ -44,5 +45,13 @@ public class Shooter extends SubsystemBase {
 
     public double getShootSpeed() {
         return shootEncoder.getVelocity();
+    }
+
+    public double getCurrent() {
+        return mShootA.getOutputCurrent();
+    }
+
+    public void setKicker(double power) {
+        mKick.set(ControlMode.PercentOutput, -power);
     }
 }

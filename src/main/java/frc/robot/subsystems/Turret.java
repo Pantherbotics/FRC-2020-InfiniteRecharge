@@ -7,6 +7,7 @@ import com.ctre.phoenix.motorcontrol.can.TalonSRX;
 import edu.wpi.first.wpilibj.Notifier;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.Constants;
+import frc.robot.util.Units;
 
 public class Turret extends SubsystemBase {
 
@@ -25,24 +26,44 @@ public class Turret extends SubsystemBase {
         mTurret.configMotionAcceleration(Constants.turretMaxAccel, timeoutMs);
 
         Notifier turretLoop = new Notifier(() -> {
-            mTurret.set(ControlMode.MotionMagic, turretPos);
+            //mTurret.set(ControlMode.MotionMagic, turretPos + Constants.turretOffset);
         });
 
         turretLoop.startPeriodic(0.02);
     }
 
-    public void setTurretPos(int pos) {
+    public void setAngle(double degrees) {
+        setPos(Units.turretAngle2Pos(degrees));
+    }
+
+    public void setPos(int pos) {
         if (pos < Constants.turretLowBound) { pos = Constants.turretLowBound; }
         else if (pos > Constants.turretUpBound) { pos = Constants.turretUpBound; }
         
         turretPos = pos;
     }
 
-    public int getTurretPos() {
+    public int getSetpoint() {
         return turretPos;
     }
 
-    public int getEncoder() {
+    public int getPosRaw() {
         return mTurret.getSelectedSensorPosition(0);
+    }
+
+    public int getPos() {
+        return getPosRaw() + Constants.turretOffset;
+    }
+
+    public double getAngle() {
+        return Units.turretPos2Angle(getPos());
+    }
+
+    public double getVoltage() {
+        return mTurret.getMotorOutputVoltage();
+    }
+
+    public double getCurrent() {
+        return mTurret.getStatorCurrent();
     }
 }

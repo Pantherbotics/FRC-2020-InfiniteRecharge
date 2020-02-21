@@ -7,9 +7,15 @@
 
 package frc.robot;
 
+import java.util.HashMap;
+
 import edu.wpi.first.wpilibj.TimedRobot;
+import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
+import edu.wpi.first.wpilibj.trajectory.Trajectory;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.CommandScheduler;
+
+import frc.robot.util.*;
 
 /**
  * The VM is configured to automatically run this class, and to call the
@@ -19,9 +25,10 @@ import edu.wpi.first.wpilibj2.command.CommandScheduler;
  * project.
  */
 public class Robot extends TimedRobot {
-    private Command m_autonomousCommand;
-
-    private RobotContainer m_robotContainer;
+    private Command kAutonomousCommand;
+    private RobotContainer kRobotContainer;
+    private final SendableChooser<String> kChooser = new SendableChooser<>();
+    private HashMap<String, Path> paths = new HashMap<>();
 
     /**
      * This function is run when the robot is first started up and should be used
@@ -32,7 +39,11 @@ public class Robot extends TimedRobot {
         // Instantiate our RobotContainer. This will perform all our button bindings,
         // and put our
         // autonomous chooser on the dashboard.
-        m_robotContainer = new RobotContainer();
+        kRobotContainer = new RobotContainer();
+
+        kChooser.setDefaultOption("None", null);
+
+        
     }
 
     /**
@@ -54,6 +65,7 @@ public class Robot extends TimedRobot {
         // robot's periodic
         // block in order for anything in the Command-based framework to work.
         CommandScheduler.getInstance().run();
+        kRobotContainer.updateSmartDashboard();
     }
 
     /**
@@ -73,11 +85,11 @@ public class Robot extends TimedRobot {
      */
     @Override
     public void autonomousInit() {
-        m_autonomousCommand = m_robotContainer.getAutonomousCommand(null);
+        kAutonomousCommand = kRobotContainer.getAutonomousCommand(paths.get(kChooser.getSelected()));
 
         // schedule the autonomous command (example)
-        if (m_autonomousCommand != null) {
-            m_autonomousCommand.schedule();
+        if (kAutonomousCommand != null) {
+            kAutonomousCommand.schedule();
         }
     }
 
@@ -94,8 +106,8 @@ public class Robot extends TimedRobot {
         // teleop starts running. If you want the autonomous to
         // continue until interrupted by another command, remove
         // this line or comment it out.
-        if (m_autonomousCommand != null) {
-            m_autonomousCommand.cancel();
+        if (kAutonomousCommand != null) {
+            kAutonomousCommand.cancel();
         }
     }
 
@@ -104,6 +116,7 @@ public class Robot extends TimedRobot {
      */
     @Override
     public void teleopPeriodic() {
+        CommandScheduler.getInstance().run();
     }
 
     @Override

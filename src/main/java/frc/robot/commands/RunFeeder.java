@@ -5,24 +5,51 @@ import frc.robot.subsystems.Feeder;
 
 public class RunFeeder extends CommandBase {
 
-    Feeder feed;
-    double powerF, powerB;
+    public enum Roller {
+        VERTICAL, FRONT, BACK;
+    }
 
-    public RunFeeder(Feeder feed, double powerF, double powerB) {
+    Feeder feed;
+    double power;
+    Roller place;
+
+    public RunFeeder(Feeder feed, Roller place, double power) {
         this.feed = feed;
-        this.powerF = powerF;
-        this.powerB = powerB;
+        this.place = place;
+        this.power = power;
     }
 
     @Override
     public void execute() {
-        feed.powerFeeder(powerF);
-        feed.powerColumn(powerB);
+        switch (place) {
+            case VERTICAL:
+                feed.powerVertical(power);
+                break;
+            case FRONT:
+                feed.powerFront(power);
+                break;
+            case BACK:
+                feed.powerBackBelt(power);
+                break;
+            default:
+                System.out.println("?????");
+        }
     }
 
     @Override
     public void end(boolean interrupted) {
-        feed.powerFeeder(0);
-        feed.powerColumn(0);
+        switch (place) {
+            case VERTICAL:
+                feed.powerVertical(0);
+                break;
+            case FRONT:
+                feed.powerFront(0);
+                break;
+            case BACK:
+                feed.powerBackBelt(0);
+                break;
+            default:
+                System.out.println("?????");
+        }
     }
 }

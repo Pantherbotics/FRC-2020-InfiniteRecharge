@@ -9,6 +9,7 @@ import com.revrobotics.CANSparkMaxLowLevel.MotorType;
 import edu.wpi.first.wpilibj.DoubleSolenoid;
 import edu.wpi.first.wpilibj.I2C;
 import edu.wpi.first.wpilibj.Notifier;
+import edu.wpi.first.wpilibj.Solenoid;
 import edu.wpi.first.wpilibj.DoubleSolenoid.Value;
 import edu.wpi.first.wpilibj.geometry.Pose2d;
 import edu.wpi.first.wpilibj.geometry.Rotation2d;
@@ -24,9 +25,12 @@ public class Drivetrain extends SubsystemBase {
     private CANSparkMax mRightA = new CANSparkMax(Constants.rightDriveAID, MotorType.kBrushless);
     private CANSparkMax mRightB = new CANSparkMax(Constants.rightDriveBID, MotorType.kBrushless);
 
-    private CANEncoder leftEncoder = mLeftA.getEncoder(EncoderType.kQuadrature, 1);
-    private CANEncoder rightEncoder = mRightA.getEncoder(EncoderType.kQuadrature, 1);
+    private CANEncoder leftEncoder = mLeftA.getEncoder(EncoderType.kHallSensor, 1);
+    private CANEncoder rightEncoder = mRightA.getEncoder(EncoderType.kHallSensor, 1);
+    private CANEncoder LBEncoder = mLeftB.getEncoder(EncoderType.kHallSensor, 1);
+    private CANEncoder RBEncoder = mRightB.getEncoder(EncoderType.kHallSensor, 1);
 
+    private Solenoid climbHook = new Solenoid(Constants.climbHookID);
     private DoubleSolenoid ptoShifter = new DoubleSolenoid(Constants.ptoForwardID, Constants.ptoReverseID);
 
     private AHRS gyro = new AHRS(I2C.Port.kOnboard);
@@ -80,11 +84,6 @@ public class Drivetrain extends SubsystemBase {
         mLeftA.set(nyoom - zoom);
         mRightA.set(-nyoom - zoom);
     }
-
-    public void setPower(double zoom, double nyoom) {
-        mLeftA.setVoltage(12 * (nyoom - zoom));
-        mRightA.setVoltage(12 * (-nyoom - zoom));
-    }
     
     //Ramsete
     public void ramseteInput(Double left, Double right) {
@@ -101,12 +100,12 @@ public class Drivetrain extends SubsystemBase {
                                                 Units.rpm2MPS(rightEncoder.getVelocity()));
     }
 
-    //PTO Shifter
-    public void shiftPTO(int state) { //1: Forward, 2: Off, 3: Reverse
-        if (state == 1) { ptoShifter.set(Value.kForward); }
-        else if (state == 2) { ptoShifter.set(Value.kOff); }
-        else { ptoShifter.set(Value.kReverse); }
+    //Climber
+    public void shiftPTO(DoubleSolenoid.Value val) { //1: Forward, 2: Off, 3: Reverse
+        ptoShifter.set(val);
     }
+
+    //public void shiftClimbHook()
 
     //Gyroscope
     public double getGyro() {

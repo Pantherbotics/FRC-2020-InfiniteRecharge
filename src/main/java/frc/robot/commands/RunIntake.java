@@ -1,12 +1,13 @@
 package frc.robot.commands;
 
 import edu.wpi.first.wpilibj2.command.CommandBase;
+import frc.robot.subsystems.Feeder;
 import frc.robot.subsystems.Intake;
 
 public class RunIntake extends CommandBase {
 
     public enum State {
-        GROUND, STATION, STOW;
+        GROUND, STATION, STOW, TACOBELL;
     }
 
     private Intake in;
@@ -26,12 +27,21 @@ public class RunIntake extends CommandBase {
             case GROUND:
                 in.actuateMain(true);
                 in.actuateSub(true);
+                break;
             case STATION:
                 in.actuateMain(true);
                 in.actuateSub(false);
+                break;
             case STOW:
                 in.actuateMain(false);
                 in.actuateSub(false);
+                break;
+            case TACOBELL:
+                in.actuateMain(false);
+                in.actuateSub(true);
+                break;
+            default:
+                System.out.println("???");
         }
     }
 

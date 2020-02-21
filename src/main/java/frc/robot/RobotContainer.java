@@ -10,14 +10,17 @@ package frc.robot;
 import edu.wpi.first.wpilibj.GenericHID;
 import edu.wpi.first.wpilibj.Joystick;
 import edu.wpi.first.wpilibj.XboxController;
+import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj.trajectory.Trajectory;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.RamseteCommand;
+import edu.wpi.first.wpilibj2.command.RunCommand;
 import edu.wpi.first.wpilibj2.command.button.JoystickButton;
 import edu.wpi.first.wpilibj2.command.button.POVButton;
 import frc.robot.Constants;
 import frc.robot.commands.*;
 import frc.robot.subsystems.*;
+import frc.robot.util.Path;
 
 
 /**
@@ -63,12 +66,10 @@ public class RobotContainer {
     private JoystickButton pJoyBY = new JoystickButton(pJoy, 4); //Y
     private JoystickButton pJoyLBump = new JoystickButton(pJoy, 5);
     private JoystickButton pJoyRBump = new JoystickButton(pJoy, 6);
-    private JoystickButton pJoyLTrig = new JoystickButton(pJoy, 7);
-    private JoystickButton pJoyRTrig = new JoystickButton(pJoy, 8);
-    private JoystickButton pJoyBBack = new JoystickButton(pJoy, 9); //Back
-    private JoystickButton pJoyBStart = new JoystickButton(pJoy, 10); //Start
-    private JoystickButton pJoyLB = new JoystickButton(pJoy, 11);
-    private JoystickButton pJoyRB = new JoystickButton(pJoy, 12);
+    private JoystickButton pJoyBBack = new JoystickButton(pJoy, 7); //Back
+    private JoystickButton pJoyBStart = new JoystickButton(pJoy, 8); //Start
+    private JoystickButton pJoyLB = new JoystickButton(pJoy, 9);
+    private JoystickButton pJoyRB = new JoystickButton(pJoy, 10);
     private POVButton pJoyPOVN = new POVButton(pJoy, 0);
     private POVButton pJoyPOVE = new POVButton(pJoy, 90);
     private POVButton pJoyPOVS = new POVButton(pJoy, 180);
@@ -90,17 +91,33 @@ public class RobotContainer {
      */
     private void configureButtonBindings() {
         //Drivetrain
-        kDrivetrain.setDefaultCommand(new DriveOpen(kDrivetrain, this));
+        kDrivetrain.setDefaultCommand(new RunCommand(() -> 
+            kDrivetrain.setVelocity(getJoyLeftY(), getJoyRightX()), kDrivetrain //Functional, not tuned
+        ));
         //Intake
         joyLTrig.whileHeld(new RunIntake(kIntake, RunIntake.State.GROUND, 0.5), true);
-        joyRTrig.whileHeld(new RunIntake(kIntake, RunIntake.State.STATION, 0.2), true);
+        joyRTrig.whileHeld(new RunIntake(kIntake, RunIntake.State.STATION, 0.0), true);
         joyLBump.whenPressed(new RunIntake(kIntake, RunIntake.State.STOW, 0.0), true);
+        joyRBump.whileHeld(new RunIntake(kIntake, RunIntake.State.TACOBELL, -0.5), true);
 
         //Feeder
-        pJoyLTrig.whileHeld(new RunFeeder(kFeeder, 0.75, 0.3), true);
+        pJoyBY.whileHeld(new RunFeeder(kFeeder, RunFeeder.Roller.FRONT, 0.4), false);
+        pJoyBY.whileHeld(new RunFeeder(kFeeder, RunFeeder.Roller.BACK, 0.4), false);
+        pJoyBB.whileHeld(new RunFeeder(kFeeder, RunFeeder.Roller.VERTICAL, 0.5), false);
 
         //Turret
-        
+        //pJoyLTrig.whileHeld(new Aimbot(kTurret));
+        pJoyPOVN.whenPressed(new RunTurret(kTurret, 0.0), true);
+        pJoyPOVE.whenPressed(new RunTurret(kTurret, 90.0), true);
+        //pJoyPOVS.whenPressed(new RunTurret(kTurret, 180.0), true);
+        pJoyPOVW.whenPressed(new RunTurret(kTurret, -90.0), true);
+
+        //Shooter
+        pJoyLBump.whileHeld(new RunShooter(kShooter, 0.8), false);
+        pJoyRBump.whileHeld(new RunKicker(kShooter, 1.0), false);
+
+        //Climber
+        //joyBTrack.whileHeld();
     }
 
     public double getJoyLeftX() {
@@ -119,12 +136,25 @@ public class RobotContainer {
         return Math.abs(joy.getRawAxis(Constants.joyRY)) < Constants.deadband ? 0 : joy.getRawAxis(Constants.joyRY);
     }
 
+    public void updateSmartDashboard() {
+        //SmartDashboard.putNumber("DT Velocity", kDrivetrain.get);
+
+        SmartDashboard.putNumber("Vert Current", kFeeder.getVertCurrent());
+
+        SmartDashboard.putNumber("Shooter Speed", kShooter.getShootSpeed());
+        SmartDashboard.putNumber("Shooter Current", kShooter.getCurrent());
+
+        SmartDashboard.putNumber("Turret Pos Raw", kTurret.getPosRaw());
+        SmartDashboard.putNumber("Turret Pos", kTurret.getPos());
+        SmartDashboard.putNumber("Turret Current", kTurret.getCurrent());
+    }
+
     /**
      * Use this to pass the autonomous command to the main {@link Robot} class.
      *
      * @return the command to run in autonomous
      */
-    public Command getAutonomousCommand(Trajectory traj) {
+    public Command getAutonomousCommand(Path p) {
         //AutoCommand comm = new AutoCommand(traj, kDrivetrain, kIntake, kFeeder, kShooter, kTurret);
 
         //return comm.start();

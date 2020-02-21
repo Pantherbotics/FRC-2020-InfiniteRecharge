@@ -6,16 +6,16 @@ import frc.robot.subsystems.Turret;
 public class RunTurret extends CommandBase {
 
     Turret tourettes;
-    int pos;
+    double deg;
 
-    public RunTurret(Turret t, int pos) {
+    public RunTurret(Turret t, double deg) {
         tourettes = t;
-        this.pos = pos;
+        this.deg = deg;
     }
 
     @Override
     public void execute() {
-        tourettes.setTurretPos(pos);
+        tourettes.setAngle(deg);
 
         isFinished();
     }
