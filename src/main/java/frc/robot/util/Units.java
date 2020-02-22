@@ -6,10 +6,10 @@ public class Units {
     }
 
     public static int turretAngle2Pos(double angle) {
-        return (int) (angle / 180 * 1);
+        return (int) (angle / 180 * 16600);
     }
 
     public static double turretPos2Angle(int pos) {
-        return pos / 1 * 180;
+        return pos / 16600 * 180;
     }
 }

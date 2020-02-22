@@ -13,6 +13,7 @@ import edu.wpi.first.wpilibj.XboxController;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj.trajectory.Trajectory;
 import edu.wpi.first.wpilibj2.command.Command;
+import edu.wpi.first.wpilibj2.command.ParallelCommandGroup;
 import edu.wpi.first.wpilibj2.command.RamseteCommand;
 import edu.wpi.first.wpilibj2.command.RunCommand;
 import edu.wpi.first.wpilibj2.command.button.JoystickButton;
@@ -101,11 +102,12 @@ public class RobotContainer {
         joyRBump.whileHeld(new RunIntake(kIntake, RunIntake.State.TACOBELL, -0.5), true);
 
         //Feeder
-        pJoyBY.whileHeld(new RunFeeder(kFeeder, RunFeeder.Roller.FRONT, 0.4), false);
-        pJoyBY.whileHeld(new RunFeeder(kFeeder, RunFeeder.Roller.BACK, 0.4), false);
+        pJoyBY.whileHeld(new RunFeeder(kFeeder, RunFeeder.Roller.FRONT, 0.6), false);
+        pJoyBY.whileHeld(new RunFeeder(kFeeder, RunFeeder.Roller.BACK, 0.6), false);
         pJoyBB.whileHeld(new RunFeeder(kFeeder, RunFeeder.Roller.VERTICAL, 0.5), false);
 
         //Turret
+        pJoyBX.whileHeld(new RunTurret(kTurret, 1.0), false);
         //pJoyLTrig.whileHeld(new Aimbot(kTurret));
         pJoyPOVN.whenPressed(new RunTurret(kTurret, 0.0), true);
         pJoyPOVE.whenPressed(new RunTurret(kTurret, 90.0), true);
@@ -113,10 +115,11 @@ public class RobotContainer {
         pJoyPOVW.whenPressed(new RunTurret(kTurret, -90.0), true);
 
         //Shooter
-        pJoyLBump.whileHeld(new RunShooter(kShooter, 0.8), false);
+        pJoyLBump.whileHeld(new RunShooter(kShooter, 4750.0), false);
         pJoyRBump.whileHeld(new RunKicker(kShooter, 1.0), false);
 
         //Climber
+        //joyBPS4.whenPressed(command)
         //joyBTrack.whileHeld();
     }
 
@@ -146,7 +149,13 @@ public class RobotContainer {
 
         SmartDashboard.putNumber("Turret Pos Raw", kTurret.getPosRaw());
         SmartDashboard.putNumber("Turret Pos", kTurret.getPos());
+        SmartDashboard.putNumber("Turret Velocity", kTurret.getVelocity());
         SmartDashboard.putNumber("Turret Current", kTurret.getCurrent());
+    }
+
+    public ParallelCommandGroup disabledCommands() {
+        return new ParallelCommandGroup(new RunIntake(kIntake, RunIntake.State.STOW, 0.0)
+        );
     }
 
     /**

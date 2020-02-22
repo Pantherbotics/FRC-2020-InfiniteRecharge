@@ -17,7 +17,7 @@ public class Turret extends SubsystemBase {
     private int timeoutMs = 0;
 
     public Turret() {
-        mTurret.configSelectedFeedbackSensor(FeedbackDevice.Analog, 0, timeoutMs);
+        mTurret.configSelectedFeedbackSensor(FeedbackDevice.QuadEncoder, 0, timeoutMs);
         mTurret.config_kP(0, Constants.turretP, timeoutMs);
         mTurret.config_kI(0, Constants.turretI, timeoutMs);
         mTurret.config_kD(0, Constants.turretD, timeoutMs);
@@ -26,7 +26,7 @@ public class Turret extends SubsystemBase {
         mTurret.configMotionAcceleration(Constants.turretMaxAccel, timeoutMs);
 
         Notifier turretLoop = new Notifier(() -> {
-            //mTurret.set(ControlMode.MotionMagic, turretPos + Constants.turretOffset);
+            mTurret.set(ControlMode.MotionMagic, turretPos + Constants.turretOffset);
         });
 
         turretLoop.startPeriodic(0.02);
@@ -43,6 +43,10 @@ public class Turret extends SubsystemBase {
         turretPos = pos;
     }
 
+    public void setPower(double power) {
+        //mTurret.set(ControlMode.PercentOutput, power);
+    }
+
     public int getSetpoint() {
         return turretPos;
     }
@@ -51,8 +55,12 @@ public class Turret extends SubsystemBase {
         return mTurret.getSelectedSensorPosition(0);
     }
 
+    public int getVelocity() {
+        return mTurret.getSelectedSensorVelocity(0);
+    }
+
     public int getPos() {
-        return getPosRaw() + Constants.turretOffset;
+        return getPosRaw() - Constants.turretOffset;
     }
 
     public double getAngle() {

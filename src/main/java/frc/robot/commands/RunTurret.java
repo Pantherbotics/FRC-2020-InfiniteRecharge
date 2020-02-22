@@ -14,9 +14,12 @@ public class RunTurret extends CommandBase {
     }
 
     @Override
-    public void execute() {
+    public void initialize() {
         tourettes.setAngle(deg);
+    }
 
+    @Override
+    public void execute() {
         isFinished();
     }
 

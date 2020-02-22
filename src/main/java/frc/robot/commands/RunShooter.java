@@ -1,7 +1,6 @@
 package frc.robot.commands;
 
 import edu.wpi.first.wpilibj2.command.CommandBase;
-import frc.robot.subsystems.Feeder;
 import frc.robot.subsystems.Shooter;
 
 public class RunShooter extends CommandBase {
@@ -20,12 +19,14 @@ public class RunShooter extends CommandBase {
 
     @Override
     public void execute() {
-        System.out.println("help");
-        kShooter.setShooter(speed);
+        //System.out.println("help");
+        //kShooter.setShooter(speed);
+        kShooter.setShootVel(speed);
     }
 
     @Override
     public void end(boolean interrupted) {
-        kShooter.setShooter(0);
+        //kShooter.setShooter(0);
+        kShooter.setShootVel(0);
     }
 }

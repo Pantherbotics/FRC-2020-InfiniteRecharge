@@ -45,25 +45,33 @@ public final class Constants {
     public static final double driveP = 1;
     public static final double driveI = 0;
     public static final double driveD = 0;
-    public static final double ff = 0.5;
+    public static final double driveFF = 0.5;
     public static final DifferentialDriveKinematics dKinematics = new DifferentialDriveKinematics(0);
+
+    //Climber
+    public static final double climbP = 0.5;
+    public static final double climbI = 0;
+    public static final double climbD = 0;
+    public static final double climbFF = 0.5;
 
     //Intake
 
     //Shooter
-    public static final double shootP = 5.0;
+    public static final double shootP = 0.00045;
     public static final double shootI = 0;
-    public static final double shootD = 0;
-    public static final double shootF = 0;
-    public static final int turretOffset = 0;
-    public static final int turretUpBound = 0 - turretOffset;
-    public static final int turretLowBound = 0 - turretOffset;
-    public static final double turretP = 3.5;
+    public static final double shootD = 0.000;
+    public static final double shootFF = 0.00023;
+    public static final double shootMaxVel = 4500.0;
+    public static final double shootMaxAccel = 2500.0;
+    public static final int turretOffset = -132;
+    public static final int turretUpBound = 16600 - turretOffset;
+    public static final int turretLowBound = -16600 - turretOffset;
+    public static final double turretP = 5.0;
     public static final double turretI = 0;
     public static final double turretD = 0;
     public static final double turretF = 0;
-    public static final int turretMaxVel = 1000;
-    public static final int turretMaxAccel = 2000;
+    public static final int turretMaxVel = 6000;
+    public static final int turretMaxAccel = 10000;
 
     //Ramsete
     public static final double ramseteB = 2.0;

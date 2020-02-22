@@ -22,10 +22,10 @@ public class Intake extends SubsystemBase {
     }
 
     public void actuateMain(boolean on) {
-        bigPiston.set(on);
+        bigPiston.set(!on);
     }
 
     public void actuateSub(boolean on) {
-        smallPiston.set(on);
+        smallPiston.set(!on);
     }
 }

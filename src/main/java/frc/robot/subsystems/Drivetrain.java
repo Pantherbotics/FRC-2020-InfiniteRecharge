@@ -35,28 +35,39 @@ public class Drivetrain extends SubsystemBase {
 
     private AHRS gyro = new AHRS(I2C.Port.kOnboard);
 
-    private int slotID = 0;
+    private int driveID = 0;
+    private int climbID = 1;
 
     private double lastPos, currentPos, dPos, x, y, theta;
 
     public Drivetrain() {
-        mLeftA.getPIDController().setP(Constants.driveP, slotID);
-        mLeftA.getPIDController().setI(Constants.driveI, slotID);
-        mLeftA.getPIDController().setD(Constants.driveD, slotID);
-        mLeftA.getPIDController().setFF(Constants.ff, slotID);
+        mLeftA.getPIDController().setP(Constants.driveP, driveID);
+        mLeftA.getPIDController().setI(Constants.driveI, driveID);
+        mLeftA.getPIDController().setD(Constants.driveD, driveID);
+        mLeftA.getPIDController().setFF(Constants.driveFF, driveID);
 
-        mRightA.getPIDController().setP(Constants.driveP, slotID);
-        mRightA.getPIDController().setI(Constants.driveI, slotID);
-        mRightA.getPIDController().setD(Constants.driveD, slotID);
-        mRightA.getPIDController().setFF(Constants.ff, slotID);
+        mRightA.getPIDController().setP(Constants.driveP, driveID);
+        mRightA.getPIDController().setI(Constants.driveI, driveID);
+        mRightA.getPIDController().setD(Constants.driveD, driveID);
+        mRightA.getPIDController().setFF(Constants.driveFF, driveID);
+
+        mLeftA.getPIDController().setP(Constants.climbP, climbID);
+        mLeftA.getPIDController().setI(Constants.climbI, climbID);
+        mLeftA.getPIDController().setD(Constants.climbD, climbID);
+        
+        mRightA.getPIDController().setP(Constants.climbP, climbID);
+        mRightA.getPIDController().setI(Constants.climbI, climbID);
+        mRightA.getPIDController().setD(Constants.climbD, climbID);
 
         mLeftA.setIdleMode(CANSparkMax.IdleMode.kCoast);
         mLeftB.setIdleMode(CANSparkMax.IdleMode.kCoast);
         mRightA.setIdleMode(CANSparkMax.IdleMode.kCoast);
         mRightB.setIdleMode(CANSparkMax.IdleMode.kCoast);
 
-        mRightA.setInverted(true);
-        mRightB.setInverted(true);
+        mLeftA.setInverted(true);
+        mLeftB.setInverted(true);
+        mRightA.setInverted(false);
+        mRightB.setInverted(false);
 
         mLeftB.follow(mLeftA);
         mRightB.follow(mRightA);
@@ -84,6 +95,10 @@ public class Drivetrain extends SubsystemBase {
         mLeftA.set(nyoom - zoom);
         mRightA.set(-nyoom - zoom);
     }
+
+    public void setPIDID(int id) {
+        //mLeftA.getPIDController().
+    }
     
     //Ramsete
     public void ramseteInput(Double left, Double right) {
@@ -105,7 +120,9 @@ public class Drivetrain extends SubsystemBase {
         ptoShifter.set(val);
     }
 
-    //public void shiftClimbHook()
+    public void shiftClimbHook(boolean on) {
+        climbHook.set(on);
+    }
 
     //Gyroscope
     public double getGyro() {
