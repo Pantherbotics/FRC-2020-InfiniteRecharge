@@ -1,6 +1,9 @@
+package frc.robot;
+
 public class Target
 {
-    boolean exists = false;
-    int distance   = 0;
-    int horizontal = 0;
+    boolean exists   = false;
+    double  pitch    = 0;
+    double  yaw      = 0;
+    double  area     = 0;
 }
