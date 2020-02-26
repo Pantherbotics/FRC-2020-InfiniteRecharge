@@ -12,4 +12,12 @@ public class Units {
     public static double turretPos2Angle(int pos) {
         return pos / 16600 * 180;
     }
+
+    public static double i2M(double inch) {
+        return inch / 39.37;
+    }
+
+    public static double target2Spd(double area, double pitch) {
+        return 0.0; //Linear extrapolation
+    }
 }

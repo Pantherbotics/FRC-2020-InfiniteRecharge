@@ -10,8 +10,12 @@ package frc.robot;
 import edu.wpi.first.wpilibj.GenericHID;
 import edu.wpi.first.wpilibj.Joystick;
 import edu.wpi.first.wpilibj.XboxController;
+import edu.wpi.first.wpilibj.DoubleSolenoid.Value;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj.trajectory.Trajectory;
+import edu.wpi.first.wpilibj.trajectory.TrajectoryConfig;
+import edu.wpi.first.wpilibj.trajectory.TrajectoryGenerator;
+import edu.wpi.first.wpilibj.trajectory.constraint.DifferentialDriveVoltageConstraint;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.ParallelCommandGroup;
 import edu.wpi.first.wpilibj2.command.RamseteCommand;
@@ -21,7 +25,7 @@ import edu.wpi.first.wpilibj2.command.button.POVButton;
 import frc.robot.Constants;
 import frc.robot.commands.*;
 import frc.robot.subsystems.*;
-import frc.robot.util.Path;
+import frc.robot.util.*;
 
 
 /**
@@ -38,6 +42,20 @@ public class RobotContainer {
     private Feeder kFeeder = new Feeder();
     private Shooter kShooter = new Shooter();
     private Turret kTurret = new Turret();
+    private Limelight kLimelight = new Limelight();
+    private Cameras cam = new Cameras();
+
+    private TrajectoryConfig config = new TrajectoryConfig(Constants.driveMaxVel, Constants.driveMaxAccel)
+        .setKinematics(Constants.dKinematics)
+            .addConstraint(
+                new DifferentialDriveVoltageConstraint(
+                    Constants.driveSimpleFF, 
+                    Constants.dKinematics, 
+                    10
+                )
+            );
+
+    public AutoPaths ap = new AutoPaths(kDrivetrain, kIntake, kFeeder, kShooter, kTurret, kLimelight, config);
 
     private Joystick joy = new Joystick(Constants.joyID);
     private Joystick pJoy = new Joystick(Constants.pJoyID);
@@ -80,6 +98,21 @@ public class RobotContainer {
      * The container for the robot. Contains subsystems, OI devices, and commands.
      */
     public RobotContainer() {
+        /*
+        TrajectoryConfig config = new TrajectoryConfig(Constants.driveMaxVel, Constants.driveMaxAccel)
+                .setKinematics(Constants.dKinematics)
+                    .addConstraint(
+                        new DifferentialDriveVoltageConstraint(
+                            Constants.driveSimpleFF, 
+                            Constants.dKinematics, 
+                            10
+                        )
+                    );
+        System.out.println("\n\n\n\n\n\nYEEEEEEEEEEAAAAAAAHHHHHHHHH\n\n\n\n\n\n");
+
+        ap =  new AutoPaths(kDrivetrain, kIntake, kFeeder, kShooter, kTurret, kLimelight, config);
+        System.out.println("\n\n\n\n\n\n\nPRINT\n\n\n\n\n\n\n");
+        */
         // Configure the button bindings
         configureButtonBindings();
     }
@@ -91,6 +124,7 @@ public class RobotContainer {
      * passing it to a {@link edu.wpi.first.wpilibj2.command.button.JoystickButton}.
      */
     private void configureButtonBindings() {
+        cam.enableCameras();
         //Drivetrain
         kDrivetrain.setDefaultCommand(new RunCommand(() -> 
             kDrivetrain.setVelocity(getJoyLeftY(), getJoyRightX()), kDrivetrain //Functional, not tuned
@@ -102,24 +136,36 @@ public class RobotContainer {
         joyRBump.whileHeld(new RunIntake(kIntake, RunIntake.State.TACOBELL, -0.5), true);
 
         //Feeder
-        pJoyBY.whileHeld(new RunFeeder(kFeeder, RunFeeder.Roller.FRONT, 0.6), false);
-        pJoyBY.whileHeld(new RunFeeder(kFeeder, RunFeeder.Roller.BACK, 0.6), false);
-        pJoyBB.whileHeld(new RunFeeder(kFeeder, RunFeeder.Roller.VERTICAL, 0.5), false);
+        joyBT.whileHeld(new RunFeeder(kFeeder, RunFeeder.Roller.FRONT, 0.6), false);
+        joyBT.whileHeld(new RunFeeder(kFeeder, RunFeeder.Roller.BACK, 0.6), false);
+        joyBS.whileHeld(new RunFeeder(kFeeder, RunFeeder.Roller.VERTICAL, 0.4), false);
+        joyBX.whileHeld(new RunFeeder(kFeeder, RunFeeder.Roller.FRONT, -0.3), false);
+        joyBX.whileHeld(new RunFeeder(kFeeder, RunFeeder.Roller.FRONT, -0.3), false);
+        joyBX.whileHeld(new RunKicker(kShooter, -0.2), true);
 
         //Turret
-        pJoyBX.whileHeld(new RunTurret(kTurret, 1.0), false);
-        //pJoyLTrig.whileHeld(new Aimbot(kTurret));
+        //  pJoyBX.whileHeld(new RunTurret(kTurret, 1.0), false);
+        pJoyBStart.whenPressed(new Aimbot(kTurret, kLimelight), true);
         pJoyPOVN.whenPressed(new RunTurret(kTurret, 0.0), true);
         pJoyPOVE.whenPressed(new RunTurret(kTurret, 90.0), true);
         //pJoyPOVS.whenPressed(new RunTurret(kTurret, 180.0), true);
         pJoyPOVW.whenPressed(new RunTurret(kTurret, -90.0), true);
+        pJoyRB.whileHeld(new RunTurret(kTurret, 180*(Math.atan2(-getJoyRightY(), getJoyRightX()))/2*Math.PI-90.0), true);
 
         //Shooter
-        pJoyLBump.whileHeld(new RunShooter(kShooter, 4750.0), false);
+        pJoyLBump.whileHeld(new RunShooter(kShooter, 4000.0), false);
         pJoyRBump.whileHeld(new RunKicker(kShooter, 1.0), false);
 
+        //Hood
+        pJoyBA.whenPres(new RunHood(kShooter, 0.5), true);
+        pJoyBB.whenPressed(new RunHood(kShooter, 0), true);
+        pJoyBY.whenPressed(new RunHood(kShooter, 0.8), true);
+        pJoyBX.whenPressed(new RunHood(kShooter, 0.65), true);
+
         //Climber
-        //joyBPS4.whenPressed(command)
+        joyBPS4.whileHeld(new RunClimb(kDrivetrain, 0.0, true, Value.kForward));
+        joyBPS4.wh
+        joyLB.whileHeld(new RunClimb(kDrivetrain, 0.0, false, Value.kReverse));
         //joyBTrack.whileHeld();
     }
 
@@ -140,33 +186,33 @@ public class RobotContainer {
     }
 
     public void updateSmartDashboard() {
-        //SmartDashboard.putNumber("DT Velocity", kDrivetrain.get);
+        SmartDashboard.putNumber("DTL Velocity", kDrivetrain.getDriveVel()[0]);
+        SmartDashboard.putNumber("DTR Velocity", kDrivetrain.getDriveVel()[1]);
 
         SmartDashboard.putNumber("Vert Current", kFeeder.getVertCurrent());
 
         SmartDashboard.putNumber("Shooter Speed", kShooter.getShootSpeed());
         SmartDashboard.putNumber("Shooter Current", kShooter.getCurrent());
+        SmartDashboard.putNumber("Hood Pos", kShooter.getHood()[0]);
+        SmartDashboard.putNumber("HoodPos again", kShooter.getHood()[1]);
 
         SmartDashboard.putNumber("Turret Pos Raw", kTurret.getPosRaw());
         SmartDashboard.putNumber("Turret Pos", kTurret.getPos());
         SmartDashboard.putNumber("Turret Velocity", kTurret.getVelocity());
         SmartDashboard.putNumber("Turret Current", kTurret.getCurrent());
+        SmartDashboard.putBoolean("Mag Sensor", kTurret.getMagSensor());
+
+        SmartDashboard.putNumber("Lime Pitch", kLimelight.getTarget().pitch);
+        SmartDashboard.putNumber("Lime Yaw", kLimelight.getTarget().yaw);
+        SmartDashboard.putNumber("Lime Area", kLimelight.getTarget().area);
+
+        SmartDashboard.putBoolean("Hook", kDrivetrain.getHook());
+        SmartDashboard.putString("Shifter", kDrivetrain.getPTO().toString());
     }
 
     public ParallelCommandGroup disabledCommands() {
-        return new ParallelCommandGroup(new RunIntake(kIntake, RunIntake.State.STOW, 0.0)
+        return new ParallelCommandGroup(new RunIntake(kIntake, RunIntake.State.GROUND, 0.0),
+                                        new RunClimb(kDrivetrain, 0.0, true, Value.kReverse)
         );
-    }
-
-    /**
-     * Use this to pass the autonomous command to the main {@link Robot} class.
-     *
-     * @return the command to run in autonomous
-     */
-    public Command getAutonomousCommand(Path p) {
-        //AutoCommand comm = new AutoCommand(traj, kDrivetrain, kIntake, kFeeder, kShooter, kTurret);
-
-        //return comm.start();
-        return null;
     }
 }

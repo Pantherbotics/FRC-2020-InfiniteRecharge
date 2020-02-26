@@ -1,24 +1,23 @@
 package frc.robot.util;
 
 import java.util.HashMap;
-import java.util.List;
-
-import edu.wpi.first.wpilibj.geometry.Pose2d;
 import edu.wpi.first.wpilibj2.command.Command;
 
 public class Path {
 
     private String name;
-    private List<Pose2d> waypoints;
-    private HashMap<Double, Command> commTimes;
+    private HashMap<Double, Command> comms;
 
-    public Path(String name, List<Pose2d> waypoints, HashMap<Double, Command> commTimes) {
+    public Path(String name, HashMap<Double, Command> comms) {
         this.name = name;
-        this.waypoints = waypoints;
-        this.commTimes = commTimes;
+        this.comms = comms;
     }
 
     public String getName() {
         return name;
+    }
+
+    public HashMap<Double, Command> getComms() {
+        return comms;
     }
 }

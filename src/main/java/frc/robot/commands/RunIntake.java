@@ -24,6 +24,12 @@ public class RunIntake extends CommandBase {
     public void initialize() {
         switch (s) {
             case GROUND:
+                if (in.mainActuated() && !in.subActuated()) {
+                    in.actuateMain(false);
+                    in.actuateSub(true);
+                    try { wait(100); } catch (Exception e) {}
+                    in.actuateMain(true);
+                }
                 in.actuateMain(true);
                 in.actuateSub(true);
                 break;

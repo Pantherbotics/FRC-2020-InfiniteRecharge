@@ -1,9 +1,11 @@
-package frc.robot;
+package frc.robot.subsystems;
 
 import edu.wpi.first.networktables.NetworkTable;
 import edu.wpi.first.networktables.NetworkTableEntry;
 import edu.wpi.first.networktables.NetworkTableInstance;
 import edu.wpi.first.wpilibj.Notifier;
+
+import frc.robot.util.Target;
 
 public class Limelight
 {
@@ -29,7 +31,7 @@ public class Limelight
             this.update();
         });
 
-        this.updateLoop.startPeriodic(20f / 1000f);
+        this.updateLoop.startPeriodic(10f / 1000f);
     }
 
     private void update()

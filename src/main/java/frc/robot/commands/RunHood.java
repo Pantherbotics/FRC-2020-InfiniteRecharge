@@ -1,22 +1,20 @@
 package frc.robot.commands;
 
 import edu.wpi.first.wpilibj2.command.CommandBase;
-import frc.robot.subsystems.Turret;
+import frc.robot.subsystems.Shooter;
 
-public class RunTurret extends CommandBase {
+public class RunHood extends CommandBase {
+    Shooter kShooter;
+    double pos;
 
-    Turret tourettes;
-    double deg;
-
-    public RunTurret(Turret t, double deg) {
-        hasRequirement(t);
-        tourettes = t;
-        this.deg = deg;
+    public RunHood(Shooter kShooter, double pos) {
+        this.kShooter = kShooter;
+        this.pos = pos;
     }
 
     @Override
     public void initialize() {
-        tourettes.setAngle(deg);
+        kShooter.setHood(pos);
     }
 
     @Override

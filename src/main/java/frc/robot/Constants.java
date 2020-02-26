@@ -7,6 +7,7 @@
 
 package frc.robot;
 
+import edu.wpi.first.wpilibj.controller.SimpleMotorFeedforward;
 import edu.wpi.first.wpilibj.kinematics.DifferentialDriveKinematics;
 
 public final class Constants {
@@ -33,20 +34,24 @@ public final class Constants {
     public static final int shootBID = 3;
     public static final int kickID = 11;
     public static final int turretID = 4;
+    public static final int ppID = 9;
 
     //Solenoid IDs
-    public static final int ptoForwardID = 0;
-    public static final int ptoReverseID = 1;
+    public static final int ptoForwardID = 1;
+    public static final int ptoReverseID = 0;
     public static final int climbHookID = 4;
     public static final int intakeMainID = 2;
     public static final int intakeSubID = 3;
 
     //Drivetrain
-    public static final double driveP = 1;
-    public static final double driveI = 0;
-    public static final double driveD = 0;
-    public static final double driveFF = 0.5;
-    public static final DifferentialDriveKinematics dKinematics = new DifferentialDriveKinematics(0);
+    public static final double driveP = 1.44;
+    public static final double driveI = 0.0;
+    public static final double driveD = 0.68;
+    public static final double driveFF = 0.0;
+    public static final double driveMaxVel = 3.6576;
+    public static final double driveMaxAccel = 2.4384;
+    public static final SimpleMotorFeedforward driveSimpleFF = new SimpleMotorFeedforward(0.279, 0.0686, 0.014);
+    public static final DifferentialDriveKinematics dKinematics = new DifferentialDriveKinematics(0.5);
 
     //Climber
     public static final double climbP = 0.5;
@@ -57,15 +62,15 @@ public final class Constants {
     //Intake
 
     //Shooter
-    public static final double shootP = 0.00045;
+    public static final double shootP = 0.000045;
     public static final double shootI = 0;
     public static final double shootD = 0.000;
     public static final double shootFF = 0.00023;
     public static final double shootMaxVel = 4500.0;
     public static final double shootMaxAccel = 2500.0;
     public static final int turretOffset = -132;
-    public static final int turretUpBound = 16600 - turretOffset;
-    public static final int turretLowBound = -16600 - turretOffset;
+    public static final int turretUpBound = 16600;
+    public static final int turretLowBound = -16600;
     public static final double turretP = 5.0;
     public static final double turretI = 0;
     public static final double turretD = 0;
@@ -76,7 +81,7 @@ public final class Constants {
     //Ramsete
     public static final double ramseteB = 2.0;
     public static final double ramseteZeta = 0.7;
-    public static final double autoKP = 1;
-    public static final double autoKI = 0;
-    public static final double autoKD = 0;
+    public static final double autoKP = driveP;
+    public static final double autoKI = driveI;
+    public static final double autoKD = driveD;
 }

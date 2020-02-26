@@ -10,6 +10,7 @@ package frc.robot;
 import java.util.HashMap;
 
 import edu.wpi.first.wpilibj.TimedRobot;
+import edu.wpi.first.wpilibj.Timer;
 import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
 import edu.wpi.first.wpilibj.trajectory.Trajectory;
 import edu.wpi.first.wpilibj2.command.Command;
@@ -29,6 +30,7 @@ public class Robot extends TimedRobot {
     private RobotContainer kRobotContainer;
     private final SendableChooser<String> kChooser = new SendableChooser<>();
     private HashMap<String, Path> paths = new HashMap<>();
+    private Timer time = new Timer();
 
     /**
      * This function is run when the robot is first started up and should be used
@@ -39,10 +41,14 @@ public class Robot extends TimedRobot {
         // Instantiate our RobotContainer. This will perform all our button bindings,
         // and put our
         // autonomous chooser on the dashboard.
+        //System.out.println("\n\n\n\nYOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOO\n\n\n\n\n");
         kRobotContainer = new RobotContainer();
 
-        kChooser.setDefaultOption("None", null);
-
+        kChooser.setDefaultOption("None", null);/*
+        for (Path p : kRobotContainer.ap.trajs) {
+            paths.put(p.getName(), p);
+            kChooser.addOption(p.getName(), p.getName());
+        }*/
         
     }
 
@@ -86,12 +92,7 @@ public class Robot extends TimedRobot {
      */
     @Override
     public void autonomousInit() {
-        kAutonomousCommand = kRobotContainer.getAutonomousCommand(paths.get(kChooser.getSelected()));
-
-        // schedule the autonomous command (example)
-        if (kAutonomousCommand != null) {
-            kAutonomousCommand.schedule();
-        }
+        time.start();
     }
 
     /**
@@ -99,6 +100,7 @@ public class Robot extends TimedRobot {
      */
     @Override
     public void autonomousPeriodic() {
+        paths.get(kChooser.getSelected()).getComms().get(time.get()).schedule();
     }
 
     @Override

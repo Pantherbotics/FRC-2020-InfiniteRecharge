@@ -8,6 +8,7 @@ import com.revrobotics.ControlType;
 import com.revrobotics.EncoderType;
 import com.revrobotics.CANSparkMaxLowLevel.MotorType;
 
+import edu.wpi.first.wpilibj.PWM;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.Constants;
 
@@ -23,6 +24,8 @@ public class Shooter extends SubsystemBase {
     private CANSparkMax mShootA = new CANSparkMax(Constants.shootAID, MotorType.kBrushless);
     private CANSparkMax mShootB = new CANSparkMax(Constants.shootBID, MotorType.kBrushless);
     private TalonSRX mKick = new TalonSRX(Constants.kickID);
+    private PWM servoA = new PWM(0);
+    private PWM servoB = new PWM(1);
 
     private CANEncoder shootEncoder = mShootA.getEncoder(EncoderType.kHallSensor, 1);
     //private CANEncoder BEncoder = mShootB.getEncoder(EncoderType.kHallSensor, 1);
@@ -57,5 +60,14 @@ public class Shooter extends SubsystemBase {
 
     public void setKicker(double power) {
         mKick.set(ControlMode.PercentOutput, -power);
+    }
+
+    public void setHood(double pos) {
+        servoA.setPosition(pos);
+        servoB.setPosition(pos);
+    }
+
+    public double[] getHood() {
+        return new double[] {servoA.getPosition(), servoB.getPosition()};
     }
 }

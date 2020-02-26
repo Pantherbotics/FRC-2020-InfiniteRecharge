@@ -3,6 +3,7 @@ package frc.robot.subsystems;
 import com.kauailabs.navx.frc.AHRS;
 import com.revrobotics.CANEncoder;
 import com.revrobotics.CANSparkMax;
+import com.revrobotics.ControlType;
 import com.revrobotics.EncoderType;
 import com.revrobotics.CANSparkMaxLowLevel.MotorType;
 
@@ -92,12 +93,23 @@ public class Drivetrain extends SubsystemBase {
 
     //Drive Modes
     public void setVelocity(double zoom, double nyoom) {
-        mLeftA.set(nyoom - zoom);
-        mRightA.set(-nyoom - zoom);
+        mLeftA.set(-nyoom - zoom);
+        mRightA.set(nyoom - zoom);
     }
 
-    public void setPIDID(int id) {
-        //mLeftA.getPIDController().
+    public void setVelPID(double zoom, double nyoom) {
+        mLeftA.getPIDController().setReference((-nyoom - zoom), ControlType.kVelocity, 0);
+        mRightA.getPIDController().setReference((nyoom - zoom), ControlType.kVelocity, 0);
+    }
+
+    public double[] getDrivePos() {
+        double[] xd = { leftEncoder.getPosition(), rightEncoder.getPosition() };
+        return xd;
+    }
+
+    public double[] getDriveVel() {
+        double[] xd = { leftEncoder.getVelocity(), rightEncoder.getVelocity() };
+        return xd;
     }
     
     //Ramsete
@@ -106,11 +118,30 @@ public class Drivetrain extends SubsystemBase {
         mRightA.setVoltage(right);
     }
 
+    @FunctionalInterface
+    public interface xd {
+        Pose2d ramseteInput(Double l, Double r);
+    }
+
     public Pose2d getPose() {
         return new Pose2d(x, y, Rotation2d.fromDegrees(getBoundAngle()));
     }
 
+    public double getPos() {
+        return (leftEncoder.getPosition() + rightEncoder.getPosition()) / 2;
+    }
+
+    
     public DifferentialDriveWheelSpeeds getWheelSpeeds() {
+        return new DifferentialDriveWheelSpeeds(Units.rpm2MPS(leftEncoder.getVelocity()),
+                                                Units.rpm2MPS(rightEncoder.getVelocity()));
+    }
+
+    @FunctionalInterface
+    public interface lmao {
+        DifferentialDriveWheelSpeeds getWheelSpeeds();
+    }
+    public DifferentialDriveWheelSpeeds getweeeee() {
         return new DifferentialDriveWheelSpeeds(Units.rpm2MPS(leftEncoder.getVelocity()),
                                                 Units.rpm2MPS(rightEncoder.getVelocity()));
     }
@@ -122,6 +153,14 @@ public class Drivetrain extends SubsystemBase {
 
     public void shiftClimbHook(boolean on) {
         climbHook.set(on);
+    }
+
+    public Value getPTO() {
+        return ptoShifter.get();
+    }
+
+    public boolean getHook() {
+        return climbHook.get();
     }
 
     //Gyroscope
