@@ -136,12 +136,13 @@ public class RobotContainer {
         joyRBump.whileHeld(new RunIntake(kIntake, RunIntake.State.TACOBELL, -0.5), true);
 
         //Feeder
-        joyBT.whileHeld(new RunFeeder(kFeeder, RunFeeder.Roller.FRONT, 0.6), false);
-        joyBT.whileHeld(new RunFeeder(kFeeder, RunFeeder.Roller.BACK, 0.6), false);
+        joyBT.whileHeld(new RunFeeder(kFeeder, RunFeeder.Roller.FRONT, 0.6), false)
+            .whileHeld(new RunFeeder(kFeeder, RunFeeder.Roller.BACK, 0.6), false);
         joyBS.whileHeld(new RunFeeder(kFeeder, RunFeeder.Roller.VERTICAL, 0.4), false);
-        joyBX.whileHeld(new RunFeeder(kFeeder, RunFeeder.Roller.FRONT, -0.3), false);
-        joyBX.whileHeld(new RunFeeder(kFeeder, RunFeeder.Roller.FRONT, -0.3), false);
-        joyBX.whileHeld(new RunKicker(kShooter, -0.2), true);
+        joyBX.whileHeld(new RunFeeder(kFeeder, RunFeeder.Roller.FRONT, -0.3), false)
+            .whileHeld(new RunFeeder(kFeeder, RunFeeder.Roller.FRONT, -0.3), false)
+
+            .whileHeld(new RunKicker(kShooter, -0.2), true);
 
         //Turret
         //  pJoyBX.whileHeld(new RunTurret(kTurret, 1.0), false);
@@ -157,16 +158,19 @@ public class RobotContainer {
         pJoyRBump.whileHeld(new RunKicker(kShooter, 1.0), false);
 
         //Hood
-        pJoyBA.whenPres(new RunHood(kShooter, 0.5), true);
+        pJoyBA.whenPressed(new RunHood(kShooter, 0.5), true);
         pJoyBB.whenPressed(new RunHood(kShooter, 0), true);
         pJoyBY.whenPressed(new RunHood(kShooter, 0.8), true);
-        pJoyBX.whenPressed(new RunHood(kShooter, 0.65), true);
+        pJoyBX.whenPressed(new RunHood(kShooter, 0.55), true);
 
         //Climber
-        joyBPS4.whileHeld(new RunClimb(kDrivetrain, 0.0, true, Value.kForward));
-        joyBPS4.wh
-        joyLB.whileHeld(new RunClimb(kDrivetrain, 0.0, false, Value.kReverse));
-        //joyBTrack.whileHeld();
+        joyBPS4.whileHeld(new RunClimb(kDrivetrain, 0.1, true, Value.kForward))
+            .whileHeld(new CancelDrivetrain(kDrivetrain));
+        joyBTrack.whileHeld(new RunClimb(kDrivetrain, -0.1, false, Value.kReverse))
+            .whileHeld(new CancelDrivetrain(kDrivetrain));
+        joyBShare.whileHeld(new RunClimb(kDrivetrain, 0.25, false, Value.kForward))
+            .whileHeld(new CancelDrivetrain(kDrivetrain));
+        
     }
 
     public double getJoyLeftX() {

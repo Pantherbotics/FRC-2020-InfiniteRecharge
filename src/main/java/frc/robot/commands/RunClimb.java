@@ -25,6 +25,6 @@ public class RunClimb extends CommandBase {
 
     @Override
     public void execute() {
-        kDrive.setVelocity(power, 0);
+        kDrive.setClimbSpeed(power);
     }
 }

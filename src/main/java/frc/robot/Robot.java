@@ -12,7 +12,6 @@ import java.util.HashMap;
 import edu.wpi.first.wpilibj.TimedRobot;
 import edu.wpi.first.wpilibj.Timer;
 import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
-import edu.wpi.first.wpilibj.trajectory.Trajectory;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.CommandScheduler;
 
@@ -44,11 +43,11 @@ public class Robot extends TimedRobot {
         //System.out.println("\n\n\n\nYOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOO\n\n\n\n\n");
         kRobotContainer = new RobotContainer();
 
-        kChooser.setDefaultOption("None", null);/*
+        kChooser.setDefaultOption("None", null);
         for (Path p : kRobotContainer.ap.trajs) {
             paths.put(p.getName(), p);
             kChooser.addOption(p.getName(), p.getName());
-        }*/
+        }
         
     }
 

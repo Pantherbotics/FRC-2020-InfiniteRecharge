@@ -38,6 +38,7 @@ public class Drivetrain extends SubsystemBase {
 
     private int driveID = 0;
     private int climbID = 1;
+    private int cancel = 1;
 
     private double lastPos, currentPos, dPos, x, y, theta;
 
@@ -93,13 +94,18 @@ public class Drivetrain extends SubsystemBase {
 
     //Drive Modes
     public void setVelocity(double zoom, double nyoom) {
-        mLeftA.set(-nyoom - zoom);
-        mRightA.set(nyoom - zoom);
+        mLeftA.set(cancel * (-nyoom - zoom));
+        mRightA.set(cancel * (nyoom - zoom));
     }
 
     public void setVelPID(double zoom, double nyoom) {
-        mLeftA.getPIDController().setReference((-nyoom - zoom), ControlType.kVelocity, 0);
-        mRightA.getPIDController().setReference((nyoom - zoom), ControlType.kVelocity, 0);
+        mLeftA.getPIDController().setReference(cancel * (-nyoom - zoom), ControlType.kVelocity, 0);
+        mRightA.getPIDController().setReference(cancel * (nyoom - zoom), ControlType.kVelocity, 0);
+    }
+
+    public void setClimbSpeed(double speed) {
+        mLeftA.set(speed);
+        mRightA.set(speed);
     }
 
     public double[] getDrivePos() {
@@ -110,6 +116,11 @@ public class Drivetrain extends SubsystemBase {
     public double[] getDriveVel() {
         double[] xd = { leftEncoder.getVelocity(), rightEncoder.getVelocity() };
         return xd;
+    }
+
+    //True programming
+    public void setCancel(int lmao) {
+        cancel = lmao;
     }
     
     //Ramsete

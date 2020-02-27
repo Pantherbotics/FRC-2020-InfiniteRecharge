@@ -21,7 +21,6 @@ public class RunTurret extends CommandBase {
 
     @Override
     public void execute() {
-        isFinished();
     }
 
     @Override

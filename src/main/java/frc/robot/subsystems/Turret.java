@@ -16,7 +16,8 @@ public class Turret extends SubsystemBase {
 
     DigitalInput magSensor = new DigitalInput(0);
 
-    private int turretOffset = 980;
+    private int pos = 0;
+    private int turretOffset = 0;
     private int timeoutMs = 0;
 
     public Turret() {
@@ -28,12 +29,13 @@ public class Turret extends SubsystemBase {
         mTurret.configMotionCruiseVelocity(Constants.turretMaxVel, timeoutMs);
         mTurret.configMotionAcceleration(Constants.turretMaxAccel, timeoutMs);
 
+        zeroTurret();
+
         Notifier turretLoop = new Notifier(() -> {
-            if (getPos() < Constants.turretLowBound - turretOffset) {
-                setPos(Constants.turretLowBound - turretOffset);
-            } else if (getPos() > Constants.turretUpBound - turretOffset) {
-                setPos(Constants.turretUpBound - turretOffset);
-            }
+            if (pos < Constants.turretLowBound) { pos = Constants.turretLowBound; }
+            else if (pos > Constants.turretUpBound) { pos = Constants.turretUpBound; }
+        
+            mTurret.set(ControlMode.MotionMagic, pos + turretOffset);
         });
 
         turretLoop.startPeriodic(0.02);
@@ -44,10 +46,11 @@ public class Turret extends SubsystemBase {
     }
 
     public void setPos(int pos) {
-        if (pos < Constants.turretLowBound - turretOffset) { pos = Constants.turretLowBound - turretOffset; }
-        else if (pos > Constants.turretUpBound - turretOffset) { pos = Constants.turretUpBound - turretOffset; }
-        
-        mTurret.set(ControlMode.MotionMagic, pos + turretOffset);
+        this.pos = pos;
+    }
+
+    public void setVel(double spd) {
+        mTurret.set(ControlMode.Velocity, spd);
     }
 
     public void setPower(double power) {
@@ -63,7 +66,7 @@ public class Turret extends SubsystemBase {
     }
 
     public int getPos() {
-        return getPosRaw() - turretOffset;
+        return getPosRaw();
     }
 
     public double getAngle() {
@@ -79,9 +82,7 @@ public class Turret extends SubsystemBase {
     }
 
     public void zeroTurret() {
-        if (!magSensor.get()) {
-            mTurret.setSelectedSensorPosition(0, 0, timeoutMs);
-        }
+        mTurret.setSelectedSensorPosition(0, 0, timeoutMs);
     }
 
     public boolean getMagSensor() {
