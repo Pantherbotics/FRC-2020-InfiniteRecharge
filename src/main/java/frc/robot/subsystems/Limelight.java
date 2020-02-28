@@ -26,6 +26,7 @@ public class Limelight
         this.limelightTX = this.limelight.getEntry("tx");
         this.limelightTY = this.limelight.getEntry("ty");
         this.limelightTA = this.limelight.getEntry("ta");
+        
 
         this.updateLoop = new Notifier(() -> {
             this.update();
@@ -44,5 +45,9 @@ public class Limelight
     public Target getTarget()
     {
         return this.currentTarget;
+    }
+
+    public void setLights(int state) {
+        this.limelight.getEntry("ledMode").setNumber(state);
     }
 }

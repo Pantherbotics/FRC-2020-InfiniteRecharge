@@ -11,6 +11,8 @@ import edu.wpi.first.wpilibj.geometry.Rotation2d;
 import edu.wpi.first.wpilibj.trajectory.TrajectoryConfig;
 import edu.wpi.first.wpilibj.trajectory.TrajectoryGenerator;
 import edu.wpi.first.wpilibj2.command.Command;
+import edu.wpi.first.wpilibj2.command.ParallelCommandGroup;
+import edu.wpi.first.wpilibj2.command.ParallelDeadlineGroup;
 import edu.wpi.first.wpilibj2.command.ParallelRaceGroup;
 import edu.wpi.first.wpilibj2.command.RamseteCommand;
 import frc.robot.Constants;
@@ -48,46 +50,47 @@ public class AutoPaths {
                     List.of(
                         new TimedCommand(
                             0.0,
-                            new RunTurret(kTurret, 90.0).andThen(new Aimbot(kTurret, kLimelight))
-                        ),
-                        new TimedCommand(
-                            0.05,
-                            new TargetedShot(kShooter, kLimelight, 0.4)
+                            new RunTurret(kTurret, 90.0)
+                                .andThen(
+                                    new ParallelRaceGroup(
+                                        new RunLights(kLimelight, 0),
+                                        new Aimbot(kTurret, kLimelight),
+                                        new TargetedShot(kShooter, kLimelight, Constants.bulletShot, 0.5),
+                                        new RunTimer(2.5)
+                                    )
+                                )
                         ),
                         new TimedCommand(
                             2.5,
-                            new RamseteCommand(
-                                TrajectoryGenerator.generateTrajectory(
-                                    List.of(
-                                        new Pose2d(0, 0, Rotation2d.fromDegrees(0)),
-                                        new Pose2d(Units.i2M(66.91), Units.i2M(100.0), Rotation2d.fromDegrees(90.0)),
-                                        new Pose2d(Units.i2M(66.91), Units.i2M(200.0), Rotation2d.fromDegrees(90.0))
-                                    ),
-                                    config),
-                                kDrivetrain::getPose,
-                                new RamseteController(Constants.ramseteB, Constants.ramseteZeta),
-                                Constants.driveSimpleFF,
-                                Constants.dKinematics,
-                                kDrivetrain::getWheelSpeeds,
-                                new PIDController(Constants.autoKP, Constants.autoKI, Constants.autoKD),
-                                new PIDController(Constants.autoKP, Constants.autoKI, Constants.autoKD),
-                                kDrivetrain::ramseteInput,
-                                kDrivetrain
-                            ).andThen(() -> kDrivetrain.setVelPID(0, 0))
-                        ),
-                        new TimedCommand(
-                            3.0,
-                            new ParallelRaceGroup(
-                                new RunIntake(kIntake, State.GROUND, 0.5),
+                            new ParallelDeadlineGroup(
+                                new RamseteCommand(
+                                    TrajectoryGenerator.generateTrajectory(
+                                        List.of(
+                                            new Pose2d(0, 0, Rotation2d.fromDegrees(0)),
+                                            new Pose2d(Units.i2M(66.91), Units.i2M(100.0), Rotation2d.fromDegrees(90.0)),
+                                            new Pose2d(Units.i2M(66.91), Units.i2M(200.0), Rotation2d.fromDegrees(90.0))
+                                        ),
+                                        config),
+                                    kDrivetrain::getPose,
+                                    new RamseteController(Constants.ramseteB, Constants.ramseteZeta),
+                                    Constants.driveSimpleFF,
+                                    Constants.dKinematics,
+                                    kDrivetrain::getWheelSpeeds,
+                                    new PIDController(Constants.autoKP, Constants.autoKI, Constants.autoKD),
+                                    new PIDController(Constants.autoKP, Constants.autoKI, Constants.autoKD),
+                                    kDrivetrain::ramseteInput,
+                                    kDrivetrain
+                                )
+                                .andThen(() -> kDrivetrain.setVelPID(0, 0)),
+                                new RunIntake(kIntake, State.GROUND, 0.5)
+                                    .andThen(new RunIntake(kIntake, State.STOW, 0.0)),
                                 new RunFeeder(kFeeder, Roller.FRONT, 0.4),
                                 new RunFeeder(kFeeder, Roller.BACK, 0.4),
-                                new RunFeeder(kFeeder, Roller.VERTICAL, 0.4),
-                                new RunTimer(4.0)
+                                new RunFeeder(kFeeder, Roller.VERTICAL, 0.4)
                             )
-                        ),
-                        new TimedCommand(
-                            7.0,
-                            new TargetedShot(kShooter, kLimelight, 0.0)
+                            .andThen(
+                                new ParallelComm
+                            )
                         )
                     )
                 )
@@ -102,6 +105,12 @@ public class AutoPaths {
                         new TimedCommand(
                             0.0,
                             new RunTurret(kTurret, -90.0)
+                                .andThen(
+                                    new ParallelCommandGroup(
+                                        new Aimbot(kTurret, kLimelight),
+                                        new TargetedShot(kShooter, kLimelight, Constants.bulletShot, 0.0)
+                                    )
+                                )
                                 .andThen(new RamseteCommand(
                                     TrajectoryGenerator.generateTrajectory(
                                         List.of(

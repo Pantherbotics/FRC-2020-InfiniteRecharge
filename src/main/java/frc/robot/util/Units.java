@@ -17,7 +17,7 @@ public class Units {
         return inch / 39.37;
     }
 
-    public static double target2Spd(double area, double pitch) {
-        return 0.0; //Linear extrapolation
+    public static double target2Hood(double area, double pitch) {
+        return (-0.0906) * pitch + 0.9236; //Linear extrapolation
     }
 }

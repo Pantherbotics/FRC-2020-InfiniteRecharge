@@ -9,30 +9,35 @@ import frc.robot.util.Units;
 public class TargetedShot extends CommandBase {
     Shooter kShooter;
     Limelight kLimelight;
-    double power;
+    double power, shotPower;
     Target t;
 
-    public TargetedShot(Shooter kShooter, Limelight kLimelight, double idlePower) {
+    public TargetedShot(Shooter kShooter, Limelight kLimelight, double shotPower ,double idlePower) {
         hasRequirement(kShooter);
         this.kShooter = kShooter;
         this.kLimelight = kLimelight;
+        this.shotPower = shotPower;
         power = idlePower;
     }
 
     @Override
     public void initialize() {
-        //kShooter.setShooter(power);
+        kShooter.setShooter(power);
     }
 
     @Override
     public void execute() {
         t = kLimelight.getTarget();
-        kShooter.setKicker(1.0);
-        kShooter.setShootVel(Units.target2Spd(t.area, t.pitch));
+        kShooter.setKicker(0.75);
+        if ((t.area > 0.05) && (Math.abs(t.yaw) < 0.5)) {
+            kShooter.setShootVel(shotPower);
+        }
+        kShooter.setHood(Units.target2Hood(t.area, t.pitch));
     }
 
     @Override
     public void end(boolean interrupted) {
-        //kShooter.setShooter(power);
+        kShooter.setShooter(power);
+        kShooter.setKicker(0.0);
     }
 }

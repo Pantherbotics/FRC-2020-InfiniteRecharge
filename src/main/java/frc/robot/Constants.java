@@ -65,7 +65,7 @@ public final class Constants {
     public static final double shootP = 0.000045;
     public static final double shootI = 0;
     public static final double shootD = 0.000;
-    public static final double shootFF = 0.00023;
+    public static final double shootFF = 0.00021;
     public static final double shootMaxVel = 4500.0;
     public static final double shootMaxAccel = 2500.0;
     public static final int turretOffset = 0;
@@ -80,6 +80,7 @@ public final class Constants {
     public static final double aimbotP = 0.15;
     public static final double aimbotD = 2.0;
     public static final double aimbotMax = 0.25;
+    public static final double bulletShot = 3150.0;
 
     //Ramsete
     public static final double ramseteB = 2.0;
