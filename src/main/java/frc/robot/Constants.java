@@ -44,14 +44,14 @@ public final class Constants {
     public static final int intakeSubID = 3;
 
     //Drivetrain
-    public static final double driveP = 1.44;
+    public static final double driveP = 0.125;
     public static final double driveI = 0.0;
-    public static final double driveD = 0.68;
+    public static final double driveD = 0.25;
     public static final double driveFF = 0.0;
     public static final double driveMaxVel = 3.6576;
     public static final double driveMaxAccel = 2.4384;
     public static final SimpleMotorFeedforward driveSimpleFF = new SimpleMotorFeedforward(0.279, 0.0686, 0.014);
-    public static final DifferentialDriveKinematics dKinematics = new DifferentialDriveKinematics(0.5);
+    public static final DifferentialDriveKinematics dKinematics = new DifferentialDriveKinematics(0.5842);
 
     //Climber
     public static final double climbP = 0.5;
@@ -80,7 +80,7 @@ public final class Constants {
     public static final double aimbotP = 0.15;
     public static final double aimbotD = 2.0;
     public static final double aimbotMax = 0.25;
-    public static final double bulletShot = 3150.0;
+    public static final double bulletShot = 3450.0;
 
     //Ramsete
     public static final double ramseteB = 2.0;

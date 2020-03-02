@@ -15,6 +15,7 @@ import edu.wpi.first.wpilibj2.command.ParallelCommandGroup;
 import edu.wpi.first.wpilibj2.command.ParallelDeadlineGroup;
 import edu.wpi.first.wpilibj2.command.ParallelRaceGroup;
 import edu.wpi.first.wpilibj2.command.RamseteCommand;
+import edu.wpi.first.wpilibj2.command.RunCommand;
 import frc.robot.Constants;
 import frc.robot.commands.*;
 import frc.robot.commands.RunFeeder.Roller;
@@ -30,7 +31,7 @@ public class AutoPaths {
     private Limelight kLimelight;
     private TrajectoryConfig config;
 
-    public ArrayList<Path> trajs = new ArrayList<>();
+    public ArrayList<NamedCommand> trajs = new ArrayList<>();
 
     public AutoPaths(Drivetrain kDrivetrain, Intake kIntake, Feeder kFeeder, Shooter kShooter, Turret kTurret, Limelight kLimelight, TrajectoryConfig config) {
         System.out.println("\n\n\n\n\n\nlmoa\n\n\n\n\n\n\n");
@@ -43,6 +44,96 @@ public class AutoPaths {
         this.config = config;
         System.out.println("\n\n\n\n\n\nalbanian citizenship\n\n\n\n\n\n\n");
 
+        trajs.add(
+            new NamedCommand(
+                "3 Ball Face Right",
+                new RunTurret(kTurret, 90.0)
+                .andThen(
+                    new ParallelDeadlineGroup(
+                        new RunTimer(5.0),
+                        new RunLights(kLimelight, 3),
+                        new Aimbot(kTurret, kLimelight),
+                        new AutoTargetedShot(kShooter, kFeeder, kLimelight, Constants.bulletShot, 0.0)
+                    )
+                )
+                .andThen(new DriveDistance(kDrivetrain, Units.i2R(36.0)))
+                .andThen(new DriveTurn(kDrivetrain, -90.0))
+                .andThen(new DriveDistance(kDrivetrain, Units.i2R(18.0)))
+            )
+        );
+
+        trajs.add(
+            new NamedCommand(
+                "3 Ball Back",
+                new RunTurret(kTurret, 90.0)
+                .andThen(
+                    new ParallelDeadlineGroup(
+                        new RunTimer(-5.0),
+                        new RunLights(kLimelight, 3),
+                        new Aimbot(kTurret, kLimelight),
+                        new AutoTargetedShot(kShooter, kFeeder, kLimelight, Constants.bulletShot, 0.0)
+                    )
+                )
+                .andThen(
+                    new ParallelDeadlineGroup(
+                        new RunTimer(1.0),
+                        new RunCommand(() -> {
+                            kDrivetrain.setVelocity(0.5, 0.0);
+                        },
+                        kDrivetrain
+                        )    
+                    )
+                )
+            )
+        );
+
+        trajs.add(
+            new NamedCommand(
+                "3 Ball Face Right",
+                new RunTurret(kTurret, 90.0)
+                .andThen(
+                    new ParallelDeadlineGroup(
+                        new RunTimer(5.0),
+                        new RunLights(kLimelight, 3),
+                        new Aimbot(kTurret, kLimelight),
+                        new AutoTargetedShot(kShooter, kFeeder, kLimelight, Constants.bulletShot, 0.0)
+                    )
+                )
+                .andThen(new DriveTurn(kDrivetrain, 90.0))
+                .andThen(new DriveDistance(kDrivetrain, Units.i2R(18.0)))
+            )
+        );
+
+        trajs.add(
+            new NamedCommand(
+                "Ramsoote Test",
+                new DriveDistance(kDrivetrain, 3.0)
+                .andThen(new DriveTurn(kDrivetrain, 90.0))
+                .andThen(new DriveDistance(kDrivetrain, 2.0))
+                /*
+                new RamseteCommand(
+                    TrajectoryGenerator.generateTrajectory(
+                        List.of(
+                            new Pose2d(0, 0, Rotation2d.fromDegrees(0.0)),
+                            new Pose2d(2, 2, Rotation2d.fromDegrees(90.0)),
+                            new Pose2d(0, 4, Rotation2d.fromDegrees(180.0))
+                        ),
+                        config
+                    ),
+                    kDrivetrain::getPose,
+                    new RamseteController(Constants.ramseteB, Constants.ramseteZeta),
+                    Constants.driveSimpleFF,
+                    Constants.dKinematics,
+                    kDrivetrain::getWheelSpeeds,
+                    new PIDController(Constants.autoKP, Constants.autoKI, Constants.autoKD),
+                    new PIDController(Constants.autoKP, Constants.autoKI, Constants.autoKD),
+                    kDrivetrain::ramseteInput,
+                    kDrivetrain
+                )
+                */
+            )
+        );
+/*
         trajs.add(
             new Path(
                 "6 Ball Send",
@@ -89,7 +180,12 @@ public class AutoPaths {
                                 new RunFeeder(kFeeder, Roller.VERTICAL, 0.4)
                             )
                             .andThen(
-                                new ParallelComm
+                                new ParallelRaceGroup(
+                                    new RunLights(kLimelight, 0),
+                                    new Aimbot(kTurret, kLimelight),
+                                    new TargetedShot(kShooter, kLimelight, Constants.bulletShot, 0.0),
+                                    new RunTimer(5.0)
+                                )
                             )
                         )
                     )
@@ -107,8 +203,9 @@ public class AutoPaths {
                             new RunTurret(kTurret, -90.0)
                                 .andThen(
                                     new ParallelCommandGroup(
+                                        new RunLights(kLimelight, 3),
                                         new Aimbot(kTurret, kLimelight),
-                                        new TargetedShot(kShooter, kLimelight, Constants.bulletShot, 0.0)
+                                        new AutoTargetedShot(kShooter, kFeeder, kLimelight, Constants.bulletShot, 0.0)
                                     )
                                 )
                                 .andThen(new RamseteCommand(
@@ -134,6 +231,7 @@ public class AutoPaths {
                 )
             )
         );
+        */
     }
 /*
     public Path[] trajs = {
@@ -187,13 +285,13 @@ public class AutoPaths {
                 )
             ))
     };
-*/
-    private HashMap<Double, Command> toHashMap(List<TimedCommand> l) {
-        HashMap<Double, Command> hm = new HashMap<>();
-        for (TimedCommand tc : l) {
-            hm.put(tc.getTime(), tc.getCommand());
+
+    private HashMap<String, Command> toHashMap(List<NamedCommand> l) {
+        HashMap<String, Command> hm = new HashMap<>();
+        for (NamedCommand nc : l) {
+            hm.put(nc.getName(), nc.getCommand());
         }
 
         return hm;
-    }
+    }*/
 }

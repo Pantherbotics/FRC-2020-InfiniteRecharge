@@ -19,9 +19,7 @@ public class RunTimer extends CommandBase {
 
     @Override
     public void execute() {
-        if (time.get() > dt) {
-            isFinished();
-        }
+        System.out.println(time.get());
     }
 
     @Override
@@ -31,6 +29,6 @@ public class RunTimer extends CommandBase {
 
     @Override
     public boolean isFinished() {
-        return true;
+        return time.get() >= dt;
     }
 }

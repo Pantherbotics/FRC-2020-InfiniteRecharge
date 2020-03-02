@@ -33,6 +33,7 @@ public class Limelight
         });
 
         this.updateLoop.startPeriodic(10f / 1000f);
+        setLights(1);
     }
 
     private void update()

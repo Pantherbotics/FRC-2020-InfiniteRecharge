@@ -12,6 +12,7 @@ import java.util.HashMap;
 import edu.wpi.first.wpilibj.TimedRobot;
 import edu.wpi.first.wpilibj.Timer;
 import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
+import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.CommandScheduler;
 
@@ -28,8 +29,7 @@ public class Robot extends TimedRobot {
     private Command kAutonomousCommand;
     private RobotContainer kRobotContainer;
     private final SendableChooser<String> kChooser = new SendableChooser<>();
-    private HashMap<String, Path> paths = new HashMap<>();
-    private Timer time = new Timer();
+    private HashMap<String, NamedCommand> paths = new HashMap<>();
 
     /**
      * This function is run when the robot is first started up and should be used
@@ -44,11 +44,12 @@ public class Robot extends TimedRobot {
         kRobotContainer = new RobotContainer();
 
         kChooser.setDefaultOption("None", null);
-        for (Path p : kRobotContainer.ap.trajs) {
-            paths.put(p.getName(), p);
-            kChooser.addOption(p.getName(), p.getName());
+        for (NamedCommand nc : kRobotContainer.ap.trajs) {
+            paths.put(nc.getName(), nc);
+            kChooser.addOption(nc.getName(), nc.getName());
         }
         
+        SmartDashboard.putData(kChooser);
     }
 
     /**
@@ -78,11 +79,11 @@ public class Robot extends TimedRobot {
      */
     @Override
     public void disabledInit() {
-        kRobotContainer.disabledCommands().schedule(true);
     }
 
     @Override
     public void disabledPeriodic() {
+        kRobotContainer.whenDisabled();
     }
 
     /**
@@ -91,7 +92,16 @@ public class Robot extends TimedRobot {
      */
     @Override
     public void autonomousInit() {
-        time.start();
+        try {
+            kAutonomousCommand = paths.get(kChooser.getSelected()).getCommand();
+            System.out.println(kChooser.getSelected());
+        } catch (NullPointerException e) {
+            kAutonomousCommand = null;
+        }
+
+        if (kAutonomousCommand != null) {
+            kAutonomousCommand.schedule();
+        }
     }
 
     /**
@@ -99,7 +109,7 @@ public class Robot extends TimedRobot {
      */
     @Override
     public void autonomousPeriodic() {
-        paths.get(kChooser.getSelected()).getComms().get(time.get()).schedule();
+        CommandScheduler.getInstance().run();
     }
 
     @Override
@@ -108,9 +118,7 @@ public class Robot extends TimedRobot {
         // teleop starts running. If you want the autonomous to
         // continue until interrupted by another command, remove
         // this line or comment it out.
-        if (kAutonomousCommand != null) {
-            kAutonomousCommand.cancel();
-        }
+        CommandScheduler.getInstance().cancelAll();
     }
 
     /**

@@ -9,12 +9,12 @@ public class RunFeeder extends CommandBase {
         VERTICAL, FRONT, BACK;
     }
 
-    Feeder feed;
+    Feeder kFeeder;
     double power;
     Roller place;
 
-    public RunFeeder(Feeder feed, Roller place, double power) {
-        this.feed = feed;
+    public RunFeeder(Feeder kFeeder, Roller place, double power) {
+        this.kFeeder = kFeeder;
         this.place = place;
         this.power = power;
     }
@@ -23,13 +23,13 @@ public class RunFeeder extends CommandBase {
     public void execute() {
         switch (place) {
             case VERTICAL:
-                feed.powerVertical(power);
+                kFeeder.powerVertical(power);
                 break;
             case FRONT:
-                feed.powerFront(power);
+                kFeeder.powerFront(power);
                 break;
             case BACK:
-                feed.powerBackBelt(power);
+                kFeeder.powerBackBelt(power);
                 break;
             default:
                 System.out.println("?????");
@@ -40,13 +40,13 @@ public class RunFeeder extends CommandBase {
     public void end(boolean interrupted) {
         switch (place) {
             case VERTICAL:
-                feed.powerVertical(0);
+                kFeeder.powerVertical(0);
                 break;
             case FRONT:
-                feed.powerFront(0);
+                kFeeder.powerFront(0);
                 break;
             case BACK:
-                feed.powerBackBelt(0);
+                kFeeder.powerBackBelt(0);
                 break;
             default:
                 System.out.println("?????");

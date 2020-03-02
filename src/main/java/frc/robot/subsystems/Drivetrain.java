@@ -79,6 +79,10 @@ public class Drivetrain extends SubsystemBase {
         y = 0;
         theta = 0;
 
+        shiftClimbHook(false);
+        shiftPTO(Value.kReverse);
+        
+
         Notifier odomLoop = new Notifier(() -> {
             currentPos = (leftEncoder.getPosition() + rightEncoder.getPosition()) / 2;
             dPos = currentPos = lastPos;
@@ -99,8 +103,8 @@ public class Drivetrain extends SubsystemBase {
     }
 
     public void setVelPID(double zoom, double nyoom) {
-        mLeftA.getPIDController().setReference(cancel * (-nyoom - zoom), ControlType.kVelocity, 0);
-        mRightA.getPIDController().setReference(cancel * (nyoom - zoom), ControlType.kVelocity, 0);
+        mLeftA.getPIDController().setReference(cancel * 15 * Units.fps2RPM(-nyoom - zoom), ControlType.kVelocity, 0);
+        mRightA.getPIDController().setReference(cancel * 15 * Units.fps2RPM(nyoom - zoom), ControlType.kVelocity, 0);
     }
 
     public void setClimbSpeed(double speed) {
@@ -111,6 +115,10 @@ public class Drivetrain extends SubsystemBase {
     public double[] getDrivePos() {
         double[] xd = { leftEncoder.getPosition(), rightEncoder.getPosition() };
         return xd;
+    }
+
+    public double getAveragePos() {
+        return ( leftEncoder.getPosition() + rightEncoder.getPosition() ) / 2;
     }
 
     public double[] getDriveVel() {
@@ -160,6 +168,11 @@ public class Drivetrain extends SubsystemBase {
     //Climber
     public void shiftPTO(DoubleSolenoid.Value val) { //1: Forward, 2: Off, 3: Reverse
         ptoShifter.set(val);
+        if (val == Value.kForward) {
+            cancel = 0;
+        } else {
+            cancel = 1;
+        }
     }
 
     public void shiftClimbHook(boolean on) {
@@ -177,6 +190,10 @@ public class Drivetrain extends SubsystemBase {
     //Gyroscope
     public double getGyro() {
         return -gyro.getAngle();
+    }
+
+    public void zeroGyro() {
+        gyro.reset();
     }
 
     public double getBoundHalfDegrees(double angle) {

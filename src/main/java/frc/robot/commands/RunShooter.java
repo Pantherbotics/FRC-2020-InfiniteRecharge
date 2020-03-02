@@ -8,8 +8,8 @@ public class RunShooter extends CommandBase {
     private Shooter kShooter;
     private double speed;
 
-    public RunShooter(Shooter shoot, double spd) {
-        this.kShooter = shoot;
+    public RunShooter(Shooter kShooter, double spd) {
+        this.kShooter = kShooter;
         speed = spd;
     }
 

@@ -5,19 +5,35 @@ public class Units {
         return rpm * 6 * Math.PI / 2.54 / 60;
     }
 
+    public static double mps2RPM(double mps) {
+        return mps * 2.54 / 6 / Math.PI * 60;
+    }
+
+    public static double fps2RPM(double fps) {
+        return fps / 12 / 6 / Math.PI * 60;
+    }
+
+    public static double m2R(double meters) {
+        return meters * 39.37 / 6 / Math.PI;
+    }
+
     public static int turretAngle2Pos(double angle) {
         return (int) (angle / 180 * 16600);
     }
 
     public static double turretPos2Angle(int pos) {
-        return pos / 16600 * 180;
+        return (double) pos / 16600 * 180;
     }
 
     public static double i2M(double inch) {
         return inch / 39.37;
     }
 
+    public static double i2R(double inch) {
+        return inch / 6 /Math.PI;
+    }
+
     public static double target2Hood(double area, double pitch) {
-        return (-0.0906) * pitch + 0.9236; //Linear extrapolation
+        return (-0.00893) * pitch + 0.9054; //Linear extrapolation
     }
 }

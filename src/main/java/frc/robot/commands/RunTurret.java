@@ -8,9 +8,9 @@ public class RunTurret extends CommandBase {
     Turret tourettes;
     double deg;
 
-    public RunTurret(Turret t, double deg) {
-        hasRequirement(t);
-        tourettes = t;
+    public RunTurret(Turret kTurret, double deg) {
+        hasRequirement(kTurret);
+        tourettes = kTurret;
         this.deg = deg;
     }
 
@@ -24,7 +24,12 @@ public class RunTurret extends CommandBase {
     }
 
     @Override
+    public void end(boolean interrupted) {
+        System.out.println("\n\n\n\n\n\nTURRET DONE\n\n\n\n\n\n\n");
+    }
+
+    @Override
     public boolean isFinished() {
-        return true;
+        return Math.abs(tourettes.getAngle() - deg) < 5.0;
     }
 }

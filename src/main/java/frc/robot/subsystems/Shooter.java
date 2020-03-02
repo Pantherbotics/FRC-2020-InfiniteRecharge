@@ -2,6 +2,7 @@ package frc.robot.subsystems;
 
 import com.ctre.phoenix.motorcontrol.ControlMode;
 import com.ctre.phoenix.motorcontrol.can.TalonSRX;
+import com.ctre.phoenix.motorcontrol.can.VictorSPX;
 import com.revrobotics.CANEncoder;
 import com.revrobotics.CANSparkMax;
 import com.revrobotics.ControlType;
@@ -23,7 +24,7 @@ import frc.robot.Constants;
 public class Shooter extends SubsystemBase {
     private CANSparkMax mShootA = new CANSparkMax(Constants.shootAID, MotorType.kBrushless);
     private CANSparkMax mShootB = new CANSparkMax(Constants.shootBID, MotorType.kBrushless);
-    private TalonSRX mKick = new TalonSRX(Constants.kickID);
+    private VictorSPX mKick = new VictorSPX(Constants.kickID);
     private PWM servoA = new PWM(0);
     private PWM servoB = new PWM(1);
 
@@ -54,18 +55,26 @@ public class Shooter extends SubsystemBase {
         return shootEncoder.getVelocity();
     }
 
+    public boolean isReady(double speed) {
+        return Math.abs(speed - getShootSpeed()) < 50;
+    }
+
     public double getCurrent() {
         return mShootA.getOutputCurrent();
     }
 
     public void setKicker(double power) {
         mKick.set(ControlMode.PercentOutput, -power);
+        System.out.println(-power);
     }
 
     public void setHood(double pos) {
+        if (pos < 0.2)
+            pos = 0.2;
         servoA.setPosition(pos);
         servoB.setPosition(pos);
     }
+
 
     public double[] getHood() {
         return new double[] {servoA.getPosition(), servoB.getPosition()};

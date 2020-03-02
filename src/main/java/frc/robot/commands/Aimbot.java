@@ -25,7 +25,7 @@ public class Aimbot extends CommandBase {
         }*/
         //System.out.println("AIMBOT BEEP BOOP:");
         //kTurret.setPower(Constants.aimbotP * t.yaw - Constants.aimbotD * Math.abs(kTurret.getVelocity()) / 3000.0);
-        kTurret.setPos(kTurret.getPos() + (int) (125 * (t.yaw)));
+        kTurret.setPos(kTurret.getPos() + (int) (95 * (t.yaw)));
     }
 
     @Override

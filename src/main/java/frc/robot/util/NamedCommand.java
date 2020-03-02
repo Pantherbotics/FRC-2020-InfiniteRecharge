@@ -2,17 +2,17 @@ package frc.robot.util;
 
 import edu.wpi.first.wpilibj2.command.Command;
 
-public class TimedCommand {
-    private double time;
+public class NamedCommand {
+    private String name;
     private Command comm;
 
-    public TimedCommand(double time, Command comm) {
-        this.time = time;
+    public NamedCommand(String name, Command comm) {
+        this.name = name;
         this.comm = comm;
     }
 
-    public double getTime() {
-        return time;
+    public String getName() {
+        return name;
     }
 
     public Command getCommand() {

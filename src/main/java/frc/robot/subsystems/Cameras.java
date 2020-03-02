@@ -7,6 +7,6 @@ public class Cameras extends SubsystemBase {
 
     public void enableCameras() {
         CameraServer.getInstance().startAutomaticCapture(0);
-        //CameraServer.getInstance().startAutomaticCapture(1);
+        CameraServer.getInstance().startAutomaticCapture(1);
     }
 }

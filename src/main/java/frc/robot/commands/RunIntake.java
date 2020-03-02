@@ -9,41 +9,37 @@ public class RunIntake extends CommandBase {
         GROUND, STATION, STOW, TACOBELL;
     }
 
-    private Intake in;
-    private State s;
-    private double power;
+    private Intake kIntake;
+    State s, endState;
+    private double power, endPower;
 
-    public RunIntake(Intake in, State s, double power) {
-        addRequirements(in);
-        this.in = in;
+    public RunIntake(Intake kIntake, State s, double power, State endState, double endPower) {
+        addRequirements(kIntake);
+        this.kIntake = kIntake;
         this.s = s;
         this.power = power;
+        this.endState = endState;
+        this.endPower = endPower;
     }
 
     @Override
     public void initialize() {
         switch (s) {
             case GROUND:
-                if (in.mainActuated() && !in.subActuated()) {
-                    in.actuateMain(false);
-                    in.actuateSub(true);
-                    try { wait(100); } catch (Exception e) {}
-                    in.actuateMain(true);
-                }
-                in.actuateMain(true);
-                in.actuateSub(true);
+                kIntake.actuateMain(true);
+                kIntake.actuateSub(true);
                 break;
             case STATION:
-                in.actuateMain(true);
-                in.actuateSub(false);
+                kIntake.actuateMain(true);
+                kIntake.actuateSub(false);
                 break;
             case STOW:
-                in.actuateMain(false);
-                in.actuateSub(false);
+                kIntake.actuateMain(false);
+                kIntake.actuateSub(false);
                 break;
             case TACOBELL:
-                in.actuateMain(false);
-                in.actuateSub(true);
+                kIntake.actuateMain(false);
+                kIntake.actuateSub(true);
                 break;
             default:
                 System.out.println("???");
@@ -52,11 +48,31 @@ public class RunIntake extends CommandBase {
 
     @Override
     public void execute() {
-        in.powerRoller(power);
+        kIntake.powerRoller(power);
     }
 
     @Override
     public void end(boolean interrupted) {
-        in.powerRoller(0);
+        kIntake.powerRoller(endPower);
+        switch (endState) {
+            case GROUND:
+                kIntake.actuateMain(true);
+                kIntake.actuateSub(true);
+                break;
+            case STATION:
+                kIntake.actuateMain(true);
+                kIntake.actuateSub(false);
+                break;
+            case STOW:
+                kIntake.actuateMain(false);
+                kIntake.actuateSub(false);
+                break;
+            case TACOBELL:
+                kIntake.actuateMain(false);
+                kIntake.actuateSub(true);
+                break;
+            default:
+                System.out.println("???");
+        }
     }
 }

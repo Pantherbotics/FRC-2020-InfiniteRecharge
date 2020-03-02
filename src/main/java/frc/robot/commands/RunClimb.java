@@ -5,26 +5,32 @@ import edu.wpi.first.wpilibj2.command.CommandBase;
 import frc.robot.subsystems.Drivetrain;
 
 public class RunClimb extends CommandBase {
-    private Drivetrain kDrive;
+    private Drivetrain kDrivetrain;
     private double power;
     private boolean hookOn;
-    private Value shiftOn;
+    private Value shiftOn, endShift;
 
-    public RunClimb(Drivetrain drive, double power, boolean hookOn, Value shiftOn) {
-        kDrive = drive;
+    public RunClimb(Drivetrain kDrivetrain, double power, boolean hookOn, Value shiftOn, Value endShift) {
+        this.kDrivetrain = kDrivetrain;
         this.power = power;
         this.hookOn = hookOn;
         this.shiftOn = shiftOn;
+        this.endShift = endShift;
     }
 
     @Override
     public void initialize() {
-        kDrive.shiftClimbHook(hookOn);
-        kDrive.shiftPTO(shiftOn);
+        kDrivetrain.shiftClimbHook(hookOn);
+        kDrivetrain.shiftPTO(shiftOn);
     }
 
     @Override
     public void execute() {
-        kDrive.setClimbSpeed(power);
+        kDrivetrain.setClimbSpeed(power);
+    }
+
+    @Override
+    public void end(boolean interrupted) {
+        kDrivetrain.shiftPTO(endShift);
     }
 }
