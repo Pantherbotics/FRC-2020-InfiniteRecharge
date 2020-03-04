@@ -142,7 +142,7 @@ public class Drivetrain extends SubsystemBase {
         Pose2d ramseteInput(Double l, Double r);
     }
 
-    public Pose2d getPose() {
+    public synchronized Pose2d getPose() {
         return new Pose2d(x, y, Rotation2d.fromDegrees(getBoundAngle()));
     }
 
