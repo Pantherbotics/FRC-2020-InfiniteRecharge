@@ -46,62 +46,13 @@ public class AutoPaths {
 
         trajs.add(
             new NamedCommand(
-                "3 Ball Face Right",
-                new RunTurret(kTurret, 90.0)
-                .andThen(
-                    new ParallelDeadlineGroup(
-                        new RunTimer(5.0),
-                        new RunLights(kLimelight, 3),
-                        new Aimbot(kTurret, kLimelight),
-                        new AutoTargetedShot(kShooter, kFeeder, kLimelight, Constants.bulletShot, 0.0)
-                    )
-                )
-                .andThen(new DriveDistance(kDrivetrain, Units.i2R(36.0)))
-                .andThen(new DriveTurn(kDrivetrain, -90.0))
-                .andThen(new DriveDistance(kDrivetrain, Units.i2R(18.0)))
-            )
-        );
+                "6 BALL FULL SEND",
+                new AutoTargetedShot(kShooter, kFeeder, kLimelight, Constants.bulletShot, 0.5)
+                new RamseteCommand(
+                    TrajectoryGenerator.generateTrajectory(
+                        List.of(
 
-        trajs.add(
-            new NamedCommand(
-                "3 Ball Back",
-                new RunTurret(kTurret, 90.0)
-                .andThen(
-                    new ParallelDeadlineGroup(
-                        new RunTimer(-5.0),
-                        new RunLights(kLimelight, 3),
-                        new Aimbot(kTurret, kLimelight),
-                        new AutoTargetedShot(kShooter, kFeeder, kLimelight, Constants.bulletShot, 0.0)
-                    )
-                )
-                .andThen(
-                    new ParallelDeadlineGroup(
-                        new RunTimer(1.0),
-                        new RunCommand(() -> {
-                            kDrivetrain.setVelocity(0.5, 0.0);
-                        },
-                        kDrivetrain
-                        )    
-                    )
-                )
-            )
-        );
-
-        trajs.add(
-            new NamedCommand(
-                "3 Ball Face Right",
-                new RunTurret(kTurret, 90.0)
-                .andThen(
-                    new ParallelDeadlineGroup(
-                        new RunTimer(5.0),
-                        new RunLights(kLimelight, 3),
-                        new Aimbot(kTurret, kLimelight),
-                        new AutoTargetedShot(kShooter, kFeeder, kLimelight, Constants.bulletShot, 0.0)
-                    )
-                )
-                .andThen(new DriveTurn(kDrivetrain, 90.0))
-                .andThen(new DriveDistance(kDrivetrain, Units.i2R(18.0)))
-            )
+                        ), config), pose, controller, feedforward, kinematics, wheelSpeeds, leftController, rightController, outputVolts, requirements))
         );
 
         trajs.add(
