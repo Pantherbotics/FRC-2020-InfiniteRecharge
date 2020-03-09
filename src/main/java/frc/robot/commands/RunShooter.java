@@ -9,6 +9,7 @@ public class RunShooter extends CommandBase {
     private double speed;
 
     public RunShooter(Shooter kShooter, double spd) {
+        //hasRequirement(kShooter);
         this.kShooter = kShooter;
         speed = spd;
     }
@@ -20,13 +21,14 @@ public class RunShooter extends CommandBase {
     @Override
     public void execute() {
         //System.out.println("help");
-        //kShooter.setShooter(speed);
-        kShooter.setShootVel(speed);
+        kShooter.setShooter(speed);
+        //kShooter.setShootVel(speed);
+        //kShooter.setShootVolt(speed);
     }
 
     @Override
     public void end(boolean interrupted) {
-        //kShooter.setShooter(0);
-        kShooter.setShootVel(0);
+        kShooter.setShooter(0);
+        //kShooter.setShootVel(0);
     }
 }

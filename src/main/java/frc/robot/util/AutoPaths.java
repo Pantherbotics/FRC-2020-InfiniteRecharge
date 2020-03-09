@@ -106,11 +106,7 @@ public class AutoPaths {
 
         trajs.add(
             new NamedCommand(
-                "Ramsoote Test",
-                new DriveDistance(kDrivetrain, 3.0)
-                .andThen(new DriveTurn(kDrivetrain, 90.0))
-                .andThen(new DriveDistance(kDrivetrain, 2.0))
-                /*
+                "Ramsete Test",
                 new RamseteCommand(
                     TrajectoryGenerator.generateTrajectory(
                         List.of(
@@ -130,7 +126,6 @@ public class AutoPaths {
                     kDrivetrain::ramseteInput,
                     kDrivetrain
                 )
-                */
             )
         );
 /*

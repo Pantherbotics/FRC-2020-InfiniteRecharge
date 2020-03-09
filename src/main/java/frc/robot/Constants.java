@@ -62,25 +62,25 @@ public final class Constants {
     //Intake
 
     //Shooter
-    public static final double shootP = 0.000045;
+    public static final double shootP = 0.000025;
     public static final double shootI = 0;
     public static final double shootD = 0.000;
-    public static final double shootFF = 0.00021;
-    public static final double shootMaxVel = 4500.0;
-    public static final double shootMaxAccel = 2500.0;
+    public static final double shootFF = 0.00050;
+    public static final double shootMaxVel = 4000.0;
+    public static final double shootMaxAccel = 1000.0;
     public static final int turretOffset = 0;
     public static final int turretUpBound = 16600;
     public static final int turretLowBound = -16600;
-    public static final double turretP = 5.0;
+    public static final double turretP = 6.0;
     public static final double turretI = 0;
     public static final double turretD = 0;
-    public static final double turretF = 0;
+    public static final double turretF = 0.01;
     public static final int turretMaxVel = 3000;
     public static final int turretMaxAccel = 5000;
     public static final double aimbotP = 0.15;
     public static final double aimbotD = 2.0;
     public static final double aimbotMax = 0.25;
-    public static final double bulletShot = 3450.0;
+    public static final double bulletShot = 3000.0;
 
     //Ramsete
     public static final double ramseteB = 2.0;

@@ -126,7 +126,7 @@ public class RobotContainer {
      * passing it to a {@link edu.wpi.first.wpilibj2.command.button.JoystickButton}.
      */
     private void configureButtonBindings() {
-        cam.enableCameras();
+        //cam.enableCameras();
         //Drivetrain
         kDrivetrain.setDefaultCommand(new RunCommand(() -> 
             kDrivetrain.setVelocity(Math.pow(getJoyLeftY(), 5/3), Math.pow(getJoyRightX(), 5/3)), kDrivetrain //Functional, not tuned
@@ -156,6 +156,7 @@ public class RobotContainer {
             .whileHeld(new RunFeeder(kFeeder, Roller.BACK, 0.45), false);
         pJoyBY.whileHeld(new RunFeeder(kFeeder, Roller.FRONT, 0.5), false)
             .whileHeld(new RunFeeder(kFeeder, Roller.BACK, 0.5), false)
+            .whileHeld(new RunFeeder(kFeeder, Roller.VERTICAL, 0.4), false)
             .whileHeld(new RunKicker(kShooter, -0.5), false);
         //joyBS.whileHeld(new RunFeeder(kFeeder, RunFeeder.Roller.VERTICAL, 0.4), false);
         pJoyBA.whileHeld(new RunFeeder(kFeeder, Roller.FRONT, -0.3), false)
@@ -171,7 +172,7 @@ public class RobotContainer {
         //pJoyBStart.whileHeld(new Aimbot(kTurret, kLimelight), true);
         pJoyPOVN.whenPressed(new RunTurret(kTurret, 0.0), true);
         pJoyPOVE.whenPressed(new RunTurret(kTurret, 90.0), true);
-        //pJoyPOVS.whenPressed(new RunTurret(kTurret, 180.0), true);
+        pJoyPOVS.whenPressed(new RunTurret(kTurret, 180.0), true);
         pJoyPOVW.whenPressed(new RunTurret(kTurret, -90.0), true);
         //pJoyRB.whileHeld(new RunTurret(kTurret, 180*(Math.atan2(-getJoyRightY(), getJoyRightX()))/2*Math.PI-90.0), true);
 
@@ -183,23 +184,25 @@ public class RobotContainer {
             .whileHeld(new RunLights(kLimelight, 3), false);
         */
         pJoyLBump.whileHeld(new TargetedShot(kShooter, kLimelight, Constants.bulletShot, 0.4), true)
-            .whileHeld(new RunKicker(kShooter, 0.75), true)
+            .whileHeld(new RunKicker(kShooter, 0.4), true)
             .whileHeld(new Aimbot(kTurret, kLimelight), true)
             .whileHeld(new RunLights(kLimelight, 0), true);
         
-        pJoyRBump.whileHeld(new RunFeeder(kFeeder, Roller.FRONT, 0.45), false)
-            .whileHeld(new RunFeeder(kFeeder, Roller.BACK, 0.45), false)
+        pJoyRBump.whileHeld(new RunFeeder(kFeeder, Roller.FRONT, 0.5), false)
+            .whileHeld(new RunFeeder(kFeeder, Roller.BACK, 0.5), false)
             .whileHeld(new RunFeeder(kFeeder, Roller.VERTICAL, 0.4), false);
-        pJoyBStart.whenPressed(new RunShooter(kShooter, 0.75), false);
+        pJoyBStart.whileHeld(new RunShooter(kShooter, 2750.0), false);
+        //pJoyBStart.whileHeld(new RunShooter(kShooter, 2000.0), false);
         pJoyBBack.whileHeld(new RunShooter(kShooter, 0.0), true);
+        pJoyLB.whileHeld(new RunLights(kLimelight, 0), true);
         //pJoyRBump.whileHeld(new RunKicker(kShooter, 0.75), false);
         //pJoyBBack.whileHeld(new TargetedShot(kShooter, kLimelight, 0.5));
 
         //Hood
         //pJoyBA.whenPressed(new RunHood(kShooter, 0.95), true);
-        pJoyBB.whenPressed(new RunHood(kShooter, 0.65), true);
+        pJoyBB.whenPressed(new RunHood(kShooter, 0.01), true);
         //pJoyBY.whenPressed(new RunHood(kShooter, 0.75), true);
-        pJoyBX.whenPressed(new RunHood(kShooter, 0.95), true);
+        pJoyBX.whenPressed(new RunHood(kShooter, -0.01), true);
 
         //Climber
         joyBPS4.whileHeld(new RunClimb(kDrivetrain, 0.0, true, Value.kReverse, Value.kReverse));

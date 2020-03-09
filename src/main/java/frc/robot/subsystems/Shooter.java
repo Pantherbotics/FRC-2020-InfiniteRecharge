@@ -1,7 +1,6 @@
 package frc.robot.subsystems;
 
 import com.ctre.phoenix.motorcontrol.ControlMode;
-import com.ctre.phoenix.motorcontrol.can.TalonSRX;
 import com.ctre.phoenix.motorcontrol.can.VictorSPX;
 import com.revrobotics.CANEncoder;
 import com.revrobotics.CANSparkMax;
@@ -32,6 +31,7 @@ public class Shooter extends SubsystemBase {
     //private CANEncoder BEncoder = mShootB.getEncoder(EncoderType.kHallSensor, 1);
 
     public Shooter() {
+        mShootA.setInverted(true);
         mShootB.follow(mShootA, true);
         
         mShootA.getPIDController().setP(Constants.shootP, 0);
@@ -40,15 +40,24 @@ public class Shooter extends SubsystemBase {
         mShootA.getPIDController().setFF(Constants.shootFF, 0);
         mShootA.getPIDController().setSmartMotionMaxVelocity(Constants.shootMaxVel, 0);
         mShootA.getPIDController().setSmartMotionMaxAccel(Constants.shootMaxAccel, 0);
+
+        setHood(0.725);
     }
 
     public void setShooter(double speed) {
         //mShootA.getPIDController().setReference(speed, ControlType.kVelocity);
         mShootA.set(speed);
+        //System.out.println(speed);
     }
 
     public void setShootVel(double speed) {
-        mShootA.getPIDController().setReference(speed, ControlType.kSmartVelocity, 0);
+        mShootA.set(speed / 4000.0);
+        //mShootA.set((speed / 4000.0 + (speed - getShootSpeed()) / 1000) < 1.0 ? (speed / 4000.0 + (speed - getShootSpeed()) / 1000) : 1.0);
+    }
+
+    public void setShootVolt(double v) {
+        //System.out.println(v);
+        mShootA.setVoltage(v * 12.0);
     }
 
     public double getShootSpeed() {
@@ -65,7 +74,7 @@ public class Shooter extends SubsystemBase {
 
     public void setKicker(double power) {
         mKick.set(ControlMode.PercentOutput, -power);
-        System.out.println(-power);
+        //System.out.println(-power);
     }
 
     public void setHood(double pos) {

@@ -14,7 +14,7 @@ public class RunHood extends CommandBase {
 
     @Override
     public void initialize() {
-        kShooter.setHood(pos);
+        kShooter.setHood(kShooter.getHood()[0] + pos);
     }
 
     @Override
