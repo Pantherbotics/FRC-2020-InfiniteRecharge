@@ -47,7 +47,7 @@ public class RobotContainer {
     private Limelight kLimelight = new Limelight();
     private Cameras cam = new Cameras();
 
-    private TrajectoryConfig config = new TrajectoryConfig(Constants.driveMaxVel, Constants.driveMaxAccel)
+    private TrajectoryConfig forwardConfig = new TrajectoryConfig(Constants.driveMaxVel, Constants.driveMaxAccel)
         .setKinematics(Constants.dKinematics)
             .addConstraint(
                 new DifferentialDriveVoltageConstraint(
@@ -55,9 +55,19 @@ public class RobotContainer {
                     Constants.dKinematics, 
                     10
                 )
-            );
+            ).setReversed(false);
+    
+    private TrajectoryConfig reverseConfig = new TrajectoryConfig(Constants.driveMaxVel, Constants.driveMaxAccel)
+        .setKinematics(Constants.dKinematics)
+            .addConstraint(
+                new DifferentialDriveVoltageConstraint(
+                    Constants.driveSimpleFF, 
+                    Constants.dKinematics, 
+                    10
+                )
+            ).setReversed(true);
 
-    public AutoPaths ap = new AutoPaths(kDrivetrain, kIntake, kFeeder, kShooter, kTurret, kLimelight, config);
+    public AutoPaths ap = new AutoPaths(kDrivetrain, kIntake, kFeeder, kShooter, kTurret, kLimelight, forwardConfig, reverseConfig);
 
     private Joystick joy = new Joystick(Constants.joyID);
     private Joystick pJoy = new Joystick(Constants.pJoyID);
@@ -183,13 +193,13 @@ public class RobotContainer {
             .whileHeld(new Aimbot(kTurret, kLimelight))
             .whileHeld(new RunLights(kLimelight, 3), false);
         */
-        pJoyLBump.whileHeld(new TargetedShot(kShooter, kLimelight, Constants.bulletShot, 0.4), true)
+        pJoyLBump.whileHeld(new TargetedShot(kShooter, kLimelight, Constants.bulletShot, 0.5), true)
             .whileHeld(new RunKicker(kShooter, 0.4), true)
             .whileHeld(new Aimbot(kTurret, kLimelight), true)
             .whileHeld(new RunLights(kLimelight, 0), true);
         
-        pJoyRBump.whileHeld(new RunFeeder(kFeeder, Roller.FRONT, 0.5), false)
-            .whileHeld(new RunFeeder(kFeeder, Roller.BACK, 0.5), false)
+        pJoyRBump.whileHeld(new RunFeeder(kFeeder, Roller.FRONT, 0.75), false)
+            .whileHeld(new RunFeeder(kFeeder, Roller.BACK, 0.75), false)
             .whileHeld(new RunFeeder(kFeeder, Roller.VERTICAL, 0.4), false);
         pJoyBStart.whileHeld(new RunShooter(kShooter, 2750.0), false);
         //pJoyBStart.whileHeld(new RunShooter(kShooter, 2000.0), false);
@@ -229,6 +239,10 @@ public class RobotContainer {
         return Math.abs(joy.getRawAxis(Constants.joyRY)) < Constants.deadband ? 0 : joy.getRawAxis(Constants.joyRY);
     }
 
+    public void zeroGyro() {
+        kDrivetrain.zeroGyro();
+    }
+
     public void whenDisabled() {
         kDrivetrain.shiftClimbHook(false);
         kDrivetrain.shiftPTO(Value.kReverse);
@@ -236,9 +250,9 @@ public class RobotContainer {
     }
 
     public void updateSmartDashboard() {
-        SmartDashboard.putNumber("DTL Velocity", kDrivetrain.getDriveVel()[0]);
-        SmartDashboard.putNumber("DTR Velocity", kDrivetrain.getDriveVel()[1]);
-        SmartDashboard.putNumber("Gyro", kDrivetrain.getGyro());
+        SmartDashboard.putNumber("DTR Velocity", kDrivetrain.getDriveVel()[0]);
+        SmartDashboard.putNumber("DTL Velocity", kDrivetrain.getDriveVel()[1]);
+        SmartDashboard.putNumber("Gyro", kDrivetrain.getBoundAngle());
 
         SmartDashboard.putNumber("Vert Current", kFeeder.getVertCurrent());
 

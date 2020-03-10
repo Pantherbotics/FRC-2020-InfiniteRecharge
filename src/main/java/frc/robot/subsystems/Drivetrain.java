@@ -5,6 +5,7 @@ import com.revrobotics.CANEncoder;
 import com.revrobotics.CANSparkMax;
 import com.revrobotics.ControlType;
 import com.revrobotics.EncoderType;
+import com.revrobotics.CANSparkMax.SoftLimitDirection;
 import com.revrobotics.CANSparkMaxLowLevel.MotorType;
 
 import edu.wpi.first.wpilibj.DoubleSolenoid;
@@ -21,15 +22,15 @@ import frc.robot.util.Units;
 
 public class Drivetrain extends SubsystemBase {
 
-    private CANSparkMax mLeftA = new CANSparkMax(Constants.leftDriveAID, MotorType.kBrushless);
-    private CANSparkMax mLeftB = new CANSparkMax(Constants.leftDriveBID, MotorType.kBrushless);
     private CANSparkMax mRightA = new CANSparkMax(Constants.rightDriveAID, MotorType.kBrushless);
     private CANSparkMax mRightB = new CANSparkMax(Constants.rightDriveBID, MotorType.kBrushless);
+    private CANSparkMax mLeftA = new CANSparkMax(Constants.leftDriveAID, MotorType.kBrushless);
+    private CANSparkMax mLeftB = new CANSparkMax(Constants.leftDriveBID, MotorType.kBrushless);
 
-    private CANEncoder leftEncoder = mLeftA.getEncoder(EncoderType.kHallSensor, 1);
     private CANEncoder rightEncoder = mRightA.getEncoder(EncoderType.kHallSensor, 1);
-    private CANEncoder LBEncoder = mLeftB.getEncoder(EncoderType.kHallSensor, 1);
-    private CANEncoder RBEncoder = mRightB.getEncoder(EncoderType.kHallSensor, 1);
+    private CANEncoder leftEncoder = mLeftA.getEncoder(EncoderType.kHallSensor, 1);
+    private CANEncoder LBEncoder = mRightB.getEncoder(EncoderType.kHallSensor, 1);
+    private CANEncoder RBEncoder = mLeftB.getEncoder(EncoderType.kHallSensor, 1);
 
     private Solenoid climbHook = new Solenoid(Constants.climbHookID);
     private DoubleSolenoid ptoShifter = new DoubleSolenoid(Constants.ptoForwardID, Constants.ptoReverseID);
@@ -43,36 +44,26 @@ public class Drivetrain extends SubsystemBase {
     private double lastPos, currentPos, dPos, x, y, theta;
 
     public Drivetrain() {
-        mLeftA.getPIDController().setP(Constants.driveP, driveID);
-        mLeftA.getPIDController().setI(Constants.driveI, driveID);
-        mLeftA.getPIDController().setD(Constants.driveD, driveID);
-        mLeftA.getPIDController().setFF(Constants.driveFF, driveID);
-
         mRightA.getPIDController().setP(Constants.driveP, driveID);
         mRightA.getPIDController().setI(Constants.driveI, driveID);
         mRightA.getPIDController().setD(Constants.driveD, driveID);
         mRightA.getPIDController().setFF(Constants.driveFF, driveID);
 
-        mLeftA.getPIDController().setP(Constants.climbP, climbID);
-        mLeftA.getPIDController().setI(Constants.climbI, climbID);
-        mLeftA.getPIDController().setD(Constants.climbD, climbID);
+        mLeftA.getPIDController().setP(Constants.driveP, driveID);
+        mLeftA.getPIDController().setI(Constants.driveI, driveID);
+        mLeftA.getPIDController().setD(Constants.driveD, driveID);
+        mLeftA.getPIDController().setFF(Constants.driveFF, driveID);
         
-        mRightA.getPIDController().setP(Constants.climbP, climbID);
-        mRightA.getPIDController().setI(Constants.climbI, climbID);
-        mRightA.getPIDController().setD(Constants.climbD, climbID);
-
-        mLeftA.setIdleMode(CANSparkMax.IdleMode.kCoast);
-        mLeftB.setIdleMode(CANSparkMax.IdleMode.kCoast);
         mRightA.setIdleMode(CANSparkMax.IdleMode.kCoast);
         mRightB.setIdleMode(CANSparkMax.IdleMode.kCoast);
+        mLeftA.setIdleMode(CANSparkMax.IdleMode.kCoast);
+        mLeftB.setIdleMode(CANSparkMax.IdleMode.kCoast);
 
-        mLeftA.setInverted(true);
-        mLeftB.setInverted(true);
-        mRightA.setInverted(false);
-        mRightB.setInverted(false);
+        mRightA.setInverted(true);
+        mLeftA.setInverted(false);
 
-        mLeftB.follow(mLeftA);
-        mRightB.follow(mRightA);
+        mRightB.follow(mRightA, false);
+        mLeftB.follow(mLeftA, false);
 
         lastPos = 0;
         x = 0;
@@ -81,10 +72,11 @@ public class Drivetrain extends SubsystemBase {
 
         shiftClimbHook(false);
         shiftPTO(Value.kReverse);
+        zeroGyro();
         
 
         Notifier odomLoop = new Notifier(() -> {
-            currentPos = (leftEncoder.getPosition() + rightEncoder.getPosition()) / 2;
+            currentPos = (rightEncoder.getPosition() + leftEncoder.getPosition()) / 2;
             dPos = currentPos = lastPos;
             theta = Math.toRadians(getBoundAngle());
             x = dPos * Math.cos(theta);
@@ -98,31 +90,32 @@ public class Drivetrain extends SubsystemBase {
 
     //Drive Modes
     public void setVelocity(double zoom, double nyoom) {
-        mLeftA.set(cancel * (-nyoom - zoom));
-        mRightA.set(cancel * (nyoom - zoom));
+        mRightA.set(cancel * (-nyoom - zoom));
+        mLeftA.set(cancel * (nyoom - zoom));
+        //System.out.println("power");
     }
 
     public void setVelPID(double zoom, double nyoom) {
-        mLeftA.getPIDController().setReference(cancel * 15 * Units.fps2RPM(-nyoom - zoom), ControlType.kVelocity, 0);
-        mRightA.getPIDController().setReference(cancel * 15 * Units.fps2RPM(nyoom - zoom), ControlType.kVelocity, 0);
+        mRightA.getPIDController().setReference(cancel * 15 * Units.fps2RPM(-nyoom - zoom), ControlType.kVelocity, 0);
+        mLeftA.getPIDController().setReference(cancel * 15 * Units.fps2RPM(nyoom - zoom), ControlType.kVelocity, 0);
     }
 
     public void setClimbSpeed(double speed) {
-        mLeftA.set(speed);
         mRightA.set(speed);
+        mLeftA.set(speed);
     }
 
     public double[] getDrivePos() {
-        double[] xd = { leftEncoder.getPosition(), rightEncoder.getPosition() };
+        double[] xd = { rightEncoder.getPosition(), leftEncoder.getPosition() };
         return xd;
     }
 
     public double getAveragePos() {
-        return ( leftEncoder.getPosition() + rightEncoder.getPosition() ) / 2;
+        return ( rightEncoder.getPosition() + leftEncoder.getPosition() ) / 2;
     }
 
     public double[] getDriveVel() {
-        double[] xd = { leftEncoder.getVelocity(), rightEncoder.getVelocity() };
+        double[] xd = { rightEncoder.getVelocity(), leftEncoder.getVelocity() };
         return xd;
     }
 
@@ -133,8 +126,8 @@ public class Drivetrain extends SubsystemBase {
     
     //Ramsete
     public void ramseteInput(Double left, Double right) {
-        mLeftA.setVoltage(left);
-        mRightA.setVoltage(right);
+        mRightA.setVoltage(left);
+        mLeftA.setVoltage(right);
     }
 
     @FunctionalInterface
@@ -147,13 +140,13 @@ public class Drivetrain extends SubsystemBase {
     }
 
     public double getPos() {
-        return (leftEncoder.getPosition() + rightEncoder.getPosition()) / 2;
+        return (rightEncoder.getPosition() + leftEncoder.getPosition()) / 2;
     }
 
     
     public DifferentialDriveWheelSpeeds getWheelSpeeds() {
-        return new DifferentialDriveWheelSpeeds(Units.rpm2MPS(leftEncoder.getVelocity()),
-                                                Units.rpm2MPS(rightEncoder.getVelocity()));
+        return new DifferentialDriveWheelSpeeds(Units.rpm2MPS(rightEncoder.getVelocity()),
+                                                Units.rpm2MPS(leftEncoder.getVelocity()));
     }
 
     @FunctionalInterface
@@ -161,8 +154,8 @@ public class Drivetrain extends SubsystemBase {
         DifferentialDriveWheelSpeeds getWheelSpeeds();
     }
     public DifferentialDriveWheelSpeeds getweeeee() {
-        return new DifferentialDriveWheelSpeeds(Units.rpm2MPS(leftEncoder.getVelocity()),
-                                                Units.rpm2MPS(rightEncoder.getVelocity()));
+        return new DifferentialDriveWheelSpeeds(Units.rpm2MPS(rightEncoder.getVelocity()),
+                                                Units.rpm2MPS(leftEncoder.getVelocity()));
     }
 
     //Climber
@@ -189,7 +182,7 @@ public class Drivetrain extends SubsystemBase {
 
     //Gyroscope
     public double getGyro() {
-        return -gyro.getAngle();
+        return gyro.getAngle();
     }
 
     public void zeroGyro() {

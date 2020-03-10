@@ -102,6 +102,7 @@ public class Robot extends TimedRobot {
         if (kAutonomousCommand != null) {
             kAutonomousCommand.schedule();
         }
+        kRobotContainer.zeroGyro();
     }
 
     /**
