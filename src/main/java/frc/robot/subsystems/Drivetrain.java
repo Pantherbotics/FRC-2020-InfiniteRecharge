@@ -19,30 +19,30 @@ import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.Constants;
 import frc.robot.util.Units;
 
+@SuppressWarnings("unused")
 public class Drivetrain extends SubsystemBase {
 
-    private CANSparkMax mLeftA = new CANSparkMax(Constants.leftDriveAID, MotorType.kBrushless);
-    private CANSparkMax mLeftB = new CANSparkMax(Constants.leftDriveBID, MotorType.kBrushless);
-    private CANSparkMax mRightA = new CANSparkMax(Constants.rightDriveAID, MotorType.kBrushless);
-    private CANSparkMax mRightB = new CANSparkMax(Constants.rightDriveBID, MotorType.kBrushless);
+    private final CANSparkMax mLeftA = new CANSparkMax(Constants.leftDriveAID, MotorType.kBrushless);
+    private final CANSparkMax mLeftB = new CANSparkMax(Constants.leftDriveBID, MotorType.kBrushless);
+    private final CANSparkMax mRightA = new CANSparkMax(Constants.rightDriveAID, MotorType.kBrushless);
+    private final CANSparkMax mRightB = new CANSparkMax(Constants.rightDriveBID, MotorType.kBrushless);
 
-    private CANEncoder leftEncoder = mLeftA.getEncoder(EncoderType.kHallSensor, 1);
-    private CANEncoder rightEncoder = mRightA.getEncoder(EncoderType.kHallSensor, 1);
-    private CANEncoder LBEncoder = mLeftB.getEncoder(EncoderType.kHallSensor, 1);
-    private CANEncoder RBEncoder = mRightB.getEncoder(EncoderType.kHallSensor, 1);
+    private final CANEncoder leftEncoder = mLeftA.getEncoder(EncoderType.kHallSensor, 1);
+    private final CANEncoder rightEncoder = mRightA.getEncoder(EncoderType.kHallSensor, 1);
+    private final CANEncoder LBEncoder = mLeftB.getEncoder(EncoderType.kHallSensor, 1);
+    private final CANEncoder RBEncoder = mRightB.getEncoder(EncoderType.kHallSensor, 1);
 
-    private Solenoid climbHook = new Solenoid(Constants.climbHookID);
-    private DoubleSolenoid ptoShifter = new DoubleSolenoid(Constants.ptoForwardID, Constants.ptoReverseID);
+    private final Solenoid climbHook = new Solenoid(Constants.climbHookID);
+    private final DoubleSolenoid ptoShifter = new DoubleSolenoid(Constants.ptoForwardID, Constants.ptoReverseID);
 
-    private AHRS gyro = new AHRS(I2C.Port.kOnboard);
+    private final AHRS gyro = new AHRS(I2C.Port.kOnboard);
 
-    private int driveID = 0;
-    private int climbID = 1;
     private int cancel = 1;
 
     private double lastPos, currentPos, dPos, x, y, theta;
 
     public Drivetrain() {
+        int driveID = 0;
         mLeftA.getPIDController().setP(Constants.driveP, driveID);
         mLeftA.getPIDController().setI(Constants.driveI, driveID);
         mLeftA.getPIDController().setD(Constants.driveD, driveID);
@@ -53,6 +53,7 @@ public class Drivetrain extends SubsystemBase {
         mRightA.getPIDController().setD(Constants.driveD, driveID);
         mRightA.getPIDController().setFF(Constants.driveFF, driveID);
 
+        int climbID = 1;
         mLeftA.getPIDController().setP(Constants.climbP, climbID);
         mLeftA.getPIDController().setI(Constants.climbI, climbID);
         mLeftA.getPIDController().setD(Constants.climbD, climbID);
@@ -84,7 +85,7 @@ public class Drivetrain extends SubsystemBase {
         
 
         Notifier odomLoop = new Notifier(() -> {
-            currentPos = (leftEncoder.getPosition() + rightEncoder.getPosition()) / 2;
+            //currentPos = (leftEncoder.getPosition() + rightEncoder.getPosition()) / 2;
             dPos = currentPos = lastPos;
             theta = Math.toRadians(getBoundAngle());
             x = dPos * Math.cos(theta);
@@ -113,8 +114,7 @@ public class Drivetrain extends SubsystemBase {
     }
 
     public double[] getDrivePos() {
-        double[] xd = { leftEncoder.getPosition(), rightEncoder.getPosition() };
-        return xd;
+        return new double[]{ leftEncoder.getPosition(), rightEncoder.getPosition() };
     }
 
     public double getAveragePos() {
@@ -122,8 +122,7 @@ public class Drivetrain extends SubsystemBase {
     }
 
     public double[] getDriveVel() {
-        double[] xd = { leftEncoder.getVelocity(), rightEncoder.getVelocity() };
-        return xd;
+        return new double[]{ leftEncoder.getVelocity(), rightEncoder.getVelocity() };
     }
 
     //True programming

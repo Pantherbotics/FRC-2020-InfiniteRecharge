@@ -4,8 +4,8 @@ import edu.wpi.first.wpilibj2.command.CommandBase;
 import frc.robot.subsystems.Shooter;
 
 public class RunKicker extends CommandBase {
-    private Shooter kShooter;
-    private double power;
+    private final Shooter kShooter;
+    private final double power;
 
     public RunKicker(Shooter kShooter, double power) {
         this.kShooter = kShooter;

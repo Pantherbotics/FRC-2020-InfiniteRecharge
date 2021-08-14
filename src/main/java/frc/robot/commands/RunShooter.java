@@ -5,8 +5,8 @@ import frc.robot.subsystems.Shooter;
 
 public class RunShooter extends CommandBase {
 
-    private Shooter kShooter;
-    private double speed;
+    private final Shooter kShooter;
+    private final double speed;
 
     public RunShooter(Shooter kShooter, double spd) {
         //hasRequirement(kShooter);

@@ -6,7 +6,7 @@ import frc.robot.subsystems.Feeder;
 public class RunFeeder extends CommandBase {
 
     public enum Roller {
-        VERTICAL, FRONT, BACK;
+        VERTICAL, FRONT, BACK
     }
 
     Feeder kFeeder;

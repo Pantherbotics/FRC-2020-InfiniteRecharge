@@ -4,8 +4,9 @@ import edu.wpi.first.wpilibj2.command.CommandBase;
 import frc.robot.subsystems.Drivetrain;
 
 public class DriveDistance extends CommandBase {
-    private Drivetrain kDrivetrain;
-    private double distance, start;
+    private final Drivetrain kDrivetrain;
+    private final double distance;
+    private double start;
 
     public DriveDistance(Drivetrain kDrivetrain, double distance) {
         this.kDrivetrain = kDrivetrain;

@@ -10,6 +10,7 @@ import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.Constants;
 import frc.robot.util.Units;
 
+@SuppressWarnings("unused")
 public class Turret extends SubsystemBase {
 
     TalonSRX mTurret = new TalonSRX(Constants.turretID);
@@ -17,8 +18,8 @@ public class Turret extends SubsystemBase {
     DigitalInput magSensor = new DigitalInput(0);
 
     private int pos = 0;
-    private int turretOffset = 0;
-    private int timeoutMs = 0;
+    private final int turretOffset = 0;
+    private final int timeoutMs = 0;
 
     public Turret() {
         mTurret.configSelectedFeedbackSensor(FeedbackDevice.QuadEncoder, 0, timeoutMs); //4096 ticks/rev

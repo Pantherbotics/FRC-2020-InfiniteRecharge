@@ -10,7 +10,6 @@ package frc.robot;
 import java.util.HashMap;
 
 import edu.wpi.first.wpilibj.TimedRobot;
-import edu.wpi.first.wpilibj.Timer;
 import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
@@ -26,10 +25,9 @@ import frc.robot.util.*;
  * project.
  */
 public class Robot extends TimedRobot {
-    private Command kAutonomousCommand;
     private RobotContainer kRobotContainer;
     private final SendableChooser<String> kChooser = new SendableChooser<>();
-    private HashMap<String, NamedCommand> paths = new HashMap<>();
+    private final HashMap<String, NamedCommand> paths = new HashMap<>();
 
     /**
      * This function is run when the robot is first started up and should be used
@@ -41,6 +39,7 @@ public class Robot extends TimedRobot {
         // and put our
         // autonomous chooser on the dashboard.
         //System.out.println("\n\n\n\nYOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOO\n\n\n\n\n");
+
         kRobotContainer = new RobotContainer();
 
         kChooser.setDefaultOption("None", null);
@@ -92,6 +91,7 @@ public class Robot extends TimedRobot {
      */
     @Override
     public void autonomousInit() {
+        Command kAutonomousCommand;
         try {
             kAutonomousCommand = paths.get(kChooser.getSelected()).getCommand();
             System.out.println(kChooser.getSelected());

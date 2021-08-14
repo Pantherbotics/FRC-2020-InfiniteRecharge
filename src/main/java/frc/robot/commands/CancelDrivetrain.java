@@ -4,7 +4,7 @@ import edu.wpi.first.wpilibj2.command.CommandBase;
 import frc.robot.subsystems.Drivetrain;
 
 public class CancelDrivetrain extends CommandBase {
-    private Drivetrain kDrivetrain;
+    private final Drivetrain kDrivetrain;
 
     public CancelDrivetrain(Drivetrain kDrivetrain) {
         this.kDrivetrain = kDrivetrain;

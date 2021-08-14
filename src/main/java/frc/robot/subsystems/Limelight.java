@@ -9,14 +9,12 @@ import frc.robot.util.Target;
 
 public class Limelight
 {
-    private NetworkTable limelight;
-    private NetworkTableEntry limelightTX;
-    private NetworkTableEntry limelightTY;
-    private NetworkTableEntry limelightTA;
+    private final NetworkTable limelight;
+    private final NetworkTableEntry limelightTX;
+    private final NetworkTableEntry limelightTY;
+    private final NetworkTableEntry limelightTA;
 
-    private Notifier updateLoop;
-
-    private Target currentTarget;
+    private final Target currentTarget;
 
     public Limelight()
     {
@@ -26,13 +24,11 @@ public class Limelight
         this.limelightTX = this.limelight.getEntry("tx");
         this.limelightTY = this.limelight.getEntry("ty");
         this.limelightTA = this.limelight.getEntry("ta");
-        
 
-        this.updateLoop = new Notifier(() -> {
-            this.update();
-        });
 
-        this.updateLoop.startPeriodic(10f / 1000f);
+        Notifier updateLoop = new Notifier(this::update);
+
+        updateLoop.startPeriodic(10f / 1000f);
         setLights(1);
     }
 

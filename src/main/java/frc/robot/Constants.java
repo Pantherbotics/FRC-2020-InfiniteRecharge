@@ -10,6 +10,7 @@ package frc.robot;
 import edu.wpi.first.wpilibj.controller.SimpleMotorFeedforward;
 import edu.wpi.first.wpilibj.kinematics.DifferentialDriveKinematics;
 
+@SuppressWarnings("unused")
 public final class Constants {
 
     //Joystick

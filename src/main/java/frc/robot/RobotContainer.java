@@ -12,17 +12,11 @@ import edu.wpi.first.wpilibj.Joystick;
 import edu.wpi.first.wpilibj.XboxController;
 import edu.wpi.first.wpilibj.DoubleSolenoid.Value;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
-import edu.wpi.first.wpilibj.trajectory.Trajectory;
 import edu.wpi.first.wpilibj.trajectory.TrajectoryConfig;
-import edu.wpi.first.wpilibj.trajectory.TrajectoryGenerator;
 import edu.wpi.first.wpilibj.trajectory.constraint.DifferentialDriveVoltageConstraint;
-import edu.wpi.first.wpilibj2.command.Command;
-import edu.wpi.first.wpilibj2.command.ParallelCommandGroup;
-import edu.wpi.first.wpilibj2.command.RamseteCommand;
 import edu.wpi.first.wpilibj2.command.RunCommand;
 import edu.wpi.first.wpilibj2.command.button.JoystickButton;
 import edu.wpi.first.wpilibj2.command.button.POVButton;
-import frc.robot.Constants;
 import frc.robot.commands.*;
 import frc.robot.commands.RunFeeder.Roller;
 import frc.robot.commands.RunIntake.State;
@@ -37,17 +31,19 @@ import frc.robot.util.*;
  * scheduler calls). Instead, the structure of the robot (including subsystems,
  * commands, and button mappings) should be declared here.
  */
+
+@SuppressWarnings("unused")
 public class RobotContainer {
     // The robot's subsystems and commands are defined here...
-    private Drivetrain kDrivetrain = new Drivetrain();
-    private Intake kIntake = new Intake();
-    private Feeder kFeeder = new Feeder();
-    private Shooter kShooter = new Shooter();
-    private Turret kTurret = new Turret();
-    private Limelight kLimelight = new Limelight();
-    private Cameras cam = new Cameras();
+    private final Drivetrain kDrivetrain = new Drivetrain();
+    private final Intake kIntake = new Intake();
+    private final Feeder kFeeder = new Feeder();
+    private final Shooter kShooter = new Shooter();
+    private final Turret kTurret = new Turret();
+    private final Limelight kLimelight = new Limelight();
+    private final Cameras cam = new Cameras();
 
-    private TrajectoryConfig config = new TrajectoryConfig(Constants.driveMaxVel, Constants.driveMaxAccel)
+    private final TrajectoryConfig config = new TrajectoryConfig(Constants.driveMaxVel, Constants.driveMaxAccel)
         .setKinematics(Constants.dKinematics)
             .addConstraint(
                 new DifferentialDriveVoltageConstraint(
@@ -59,48 +55,48 @@ public class RobotContainer {
 
     public AutoPaths ap = new AutoPaths(kDrivetrain, kIntake, kFeeder, kShooter, kTurret, kLimelight, config);
 
-    private Joystick joy = new Joystick(Constants.joyID);
-    private Joystick pJoy = new Joystick(Constants.pJoyID);
+    private final Joystick joy = new Joystick(Constants.joyID);
+    private final Joystick pJoy = new Joystick(Constants.pJoyID);
 
-    private JoystickButton joyBS = new JoystickButton(joy, 1); //Square
-    private JoystickButton joyBX = new JoystickButton(joy, 2); //X
-    private JoystickButton joyBC = new JoystickButton(joy, 3); //Circle
-    private JoystickButton joyBT = new JoystickButton(joy, 4); //Triangle
-    private JoystickButton joyLBump = new JoystickButton(joy, 5); //Left Bumper
-    private JoystickButton joyRBump = new JoystickButton(joy, 6); //Right Bumper
-    private JoystickButton joyLTrig = new JoystickButton(joy, 7); //Left Trigger
-    private JoystickButton joyRTrig = new JoystickButton(joy, 8); //Right Trigger
-    private JoystickButton joyBShare = new JoystickButton(joy, 9); //Share Button
-    private JoystickButton joyBOption = new JoystickButton(joy, 10); //Option Button
-    private JoystickButton joyLB = new JoystickButton(joy, 11); //Left Joystick Button
-    private JoystickButton joyRB = new JoystickButton(joy, 12); //Right Joystick Button
-    private JoystickButton joyBPS4 = new JoystickButton(joy, 13); //PS4 Button
-    private JoystickButton joyBTrack = new JoystickButton(joy, 14); //Trackpad
-    private POVButton joyPOVN = new POVButton(joy, 0); //North
-    private POVButton joyPOVE = new POVButton(joy, 90); //East
-    private POVButton joyPOVS = new POVButton(joy, 180); //South
-    private POVButton joyPOVW = new POVButton(joy, 270); //West
+    private final JoystickButton joyBS = new JoystickButton(joy, 1); //Square
+    private final JoystickButton joyBX = new JoystickButton(joy, 2); //X
+    private final JoystickButton joyBC = new JoystickButton(joy, 3); //Circle
+    private final JoystickButton joyBT = new JoystickButton(joy, 4); //Triangle
+    private final JoystickButton joyLBump = new JoystickButton(joy, 5); //Left Bumper
+    private final JoystickButton joyRBump = new JoystickButton(joy, 6); //Right Bumper
+    private final JoystickButton joyLTrig = new JoystickButton(joy, 7); //Left Trigger
+    private final JoystickButton joyRTrig = new JoystickButton(joy, 8); //Right Trigger
+    private final JoystickButton joyBShare = new JoystickButton(joy, 9); //Share Button
+    private final JoystickButton joyBOption = new JoystickButton(joy, 10); //Option Button
+    private final JoystickButton joyLB = new JoystickButton(joy, 11); //Left Joystick Button
+    private final JoystickButton joyRB = new JoystickButton(joy, 12); //Right Joystick Button
+    private final JoystickButton joyBPS4 = new JoystickButton(joy, 13); //PS4 Button
+    private final JoystickButton joyBTrack = new JoystickButton(joy, 14); //Trackpad
+    private final POVButton joyPOVN = new POVButton(joy, 0); //North
+    private final POVButton joyPOVE = new POVButton(joy, 90); //East
+    private final POVButton joyPOVS = new POVButton(joy, 180); //South
+    private final POVButton joyPOVW = new POVButton(joy, 270); //West
 
-    private JoystickButton pJoyBA = new JoystickButton(pJoy, 1); //A
-    private JoystickButton pJoyBB = new JoystickButton(pJoy, 2); //B
-    private JoystickButton pJoyBX = new JoystickButton(pJoy, 3); //X
-    private JoystickButton pJoyBY = new JoystickButton(pJoy, 4); //Y
-    private JoystickButton pJoyLBump = new JoystickButton(pJoy, 5);
-    private JoystickButton pJoyRBump = new JoystickButton(pJoy, 6);
-    private JoystickButton pJoyBBack = new JoystickButton(pJoy, 7); //Back
-    private JoystickButton pJoyBStart = new JoystickButton(pJoy, 8); //Start
-    private JoystickButton pJoyLB = new JoystickButton(pJoy, 9);
-    private JoystickButton pJoyRB = new JoystickButton(pJoy, 10);
-    private POVButton pJoyPOVN = new POVButton(pJoy, 0);
-    private POVButton pJoyPOVE = new POVButton(pJoy, 90);
-    private POVButton pJoyPOVS = new POVButton(pJoy, 180);
-    private POVButton pJoyPOVW = new POVButton(pJoy, 270);
+    private final JoystickButton pJoyBA = new JoystickButton(pJoy, 1); //A
+    private final JoystickButton pJoyBB = new JoystickButton(pJoy, 2); //B
+    private final JoystickButton pJoyBX = new JoystickButton(pJoy, 3); //X
+    private final JoystickButton pJoyBY = new JoystickButton(pJoy, 4); //Y
+    private final JoystickButton pJoyLBump = new JoystickButton(pJoy, 5);
+    private final JoystickButton pJoyRBump = new JoystickButton(pJoy, 6);
+    private final JoystickButton pJoyBBack = new JoystickButton(pJoy, 7); //Back
+    private final JoystickButton pJoyBStart = new JoystickButton(pJoy, 8); //Start
+    private final JoystickButton pJoyLB = new JoystickButton(pJoy, 9);
+    private final JoystickButton pJoyRB = new JoystickButton(pJoy, 10);
+    private final POVButton pJoyPOVN = new POVButton(pJoy, 0);
+    private final POVButton pJoyPOVE = new POVButton(pJoy, 90);
+    private final POVButton pJoyPOVS = new POVButton(pJoy, 180);
+    private final POVButton pJoyPOVW = new POVButton(pJoy, 270);
 
     /**
      * The container for the robot. Contains subsystems, OI devices, and commands.
      */
     public RobotContainer() {
-        /*
+        /* t
         TrajectoryConfig config = new TrajectoryConfig(Constants.driveMaxVel, Constants.driveMaxAccel)
                 .setKinematics(Constants.dKinematics)
                     .addConstraint(
@@ -129,7 +125,7 @@ public class RobotContainer {
         //cam.enableCameras();
         //Drivetrain
         kDrivetrain.setDefaultCommand(new RunCommand(() -> 
-            kDrivetrain.setVelocity(Math.pow(getJoyLeftY(), 5/3), Math.pow(getJoyRightX(), 5/3)), kDrivetrain //Functional, not tuned
+            kDrivetrain.setVelocity(Math.pow(getJoyLeftY(), 5D/3D), Math.pow(getJoyRightX(), 5D/3D)), kDrivetrain //Functional, not tuned
         ));
         //Intaking
         joyLTrig.whileHeld(new RunIntake(kIntake, State.GROUND, 1.0, State.GROUND, 0.0), true)
@@ -162,22 +158,24 @@ public class RobotContainer {
         pJoyBA.whileHeld(new RunFeeder(kFeeder, Roller.FRONT, -0.3), false)
             .whileHeld(new RunFeeder(kFeeder, Roller.BACK, -0.3), false)
             .whileHeld(new RunKicker(kShooter, -0.5), true);
-        
+
+        /*
         //pJoyBX.whileHeld(new RunFeeder(kFeeder, Roller.FRONT, -0.25), false)
           //  .whileHeld(new RunFeeder(kFeeder, Roller.BACK, -0.25), false)
             //.whileHeld(new RunKicker(kShooter, -0.5), true);
+        */
 
-        //Turret
-        //pJoyBX.whileHeld(new RunTurret(kTurret, 1.0), false);
-        //pJoyBStart.whileHeld(new Aimbot(kTurret, kLimelight), true);
+        /*Turret
+        pJoyBX.whileHeld(new RunTurret(kTurret, 1.0), false);
+        pJoyBStart.whileHeld(new Aimbot(kTurret, kLimelight), true);
+        */
         pJoyPOVN.whenPressed(new RunTurret(kTurret, 0.0), true);
         pJoyPOVE.whenPressed(new RunTurret(kTurret, 90.0), true);
         pJoyPOVS.whenPressed(new RunTurret(kTurret, 180.0), true);
         pJoyPOVW.whenPressed(new RunTurret(kTurret, -90.0), true);
         //pJoyRB.whileHeld(new RunTurret(kTurret, 180*(Math.atan2(-getJoyRightY(), getJoyRightX()))/2*Math.PI-90.0), true);
 
-        //Shooting
-        /*
+        /* Shooting
         pJoyLBump.whileHeld(new RunShooter(kShooter, 3150.0), false)
             .whileHeld(new RunKicker(kShooter, 0.75))
             .whileHeld(new Aimbot(kTurret, kLimelight))

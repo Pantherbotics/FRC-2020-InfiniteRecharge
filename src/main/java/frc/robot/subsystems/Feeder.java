@@ -6,6 +6,7 @@ import com.ctre.phoenix.motorcontrol.can.TalonSRX;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.Constants;
 
+@SuppressWarnings("unused")
 public class Feeder extends SubsystemBase {
     TalonSRX mVertRollers = new TalonSRX(Constants.vertRollersID);
     TalonSRX mFrontBotRollers = new TalonSRX(Constants.frontBotRollersID);

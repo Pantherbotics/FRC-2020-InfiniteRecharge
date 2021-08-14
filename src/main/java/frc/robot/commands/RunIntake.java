@@ -6,12 +6,12 @@ import frc.robot.subsystems.Intake;
 public class RunIntake extends CommandBase {
 
     public enum State {
-        GROUND, STATION, STOW, TACOBELL;
+        GROUND, STATION, STOW, TACOBELL
     }
 
-    private Intake kIntake;
+    private final Intake kIntake;
     State s, endState;
-    private double power, endPower;
+    private final double power, endPower;
 
     public RunIntake(Intake kIntake, State s, double power, State endState, double endPower) {
         addRequirements(kIntake);

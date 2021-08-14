@@ -1,5 +1,6 @@
 package frc.robot.util;
 
+@SuppressWarnings("unused")
 public class Target
 {
     public boolean exists   = false;

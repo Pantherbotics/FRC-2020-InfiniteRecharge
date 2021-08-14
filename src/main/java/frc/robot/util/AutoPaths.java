@@ -1,7 +1,6 @@
 package frc.robot.util;
 
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
 
 import edu.wpi.first.wpilibj.controller.PIDController;
@@ -10,26 +9,22 @@ import edu.wpi.first.wpilibj.geometry.Pose2d;
 import edu.wpi.first.wpilibj.geometry.Rotation2d;
 import edu.wpi.first.wpilibj.trajectory.TrajectoryConfig;
 import edu.wpi.first.wpilibj.trajectory.TrajectoryGenerator;
-import edu.wpi.first.wpilibj2.command.Command;
-import edu.wpi.first.wpilibj2.command.ParallelCommandGroup;
 import edu.wpi.first.wpilibj2.command.ParallelDeadlineGroup;
-import edu.wpi.first.wpilibj2.command.ParallelRaceGroup;
 import edu.wpi.first.wpilibj2.command.RamseteCommand;
 import edu.wpi.first.wpilibj2.command.RunCommand;
 import frc.robot.Constants;
 import frc.robot.commands.*;
-import frc.robot.commands.RunFeeder.Roller;
-import frc.robot.commands.RunIntake.State;
 import frc.robot.subsystems.*;
 
+@SuppressWarnings("unused")
 public class AutoPaths {
-    private Drivetrain kDrivetrain;
-    private Intake kIntake;
-    private Feeder kFeeder;
-    private Shooter kShooter;
-    private Turret kTurret;
-    private Limelight kLimelight;
-    private TrajectoryConfig config;
+    private final Drivetrain kDrivetrain;
+    private final Intake kIntake;
+    private final Feeder kFeeder;
+    private final Shooter kShooter;
+    private final Turret kTurret;
+    private final Limelight kLimelight;
+    private final TrajectoryConfig config;
 
     public ArrayList<NamedCommand> trajs = new ArrayList<>();
 
@@ -77,9 +72,7 @@ public class AutoPaths {
                 .andThen(
                     new ParallelDeadlineGroup(
                         new RunTimer(1.0),
-                        new RunCommand(() -> {
-                            kDrivetrain.setVelocity(0.5, 0.0);
-                        },
+                        new RunCommand(() -> kDrivetrain.setVelocity(0.5, 0.0),
                         kDrivetrain
                         )    
                     )
