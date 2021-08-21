@@ -171,12 +171,10 @@ public class RobotContainer {
         pJoyBStart.whileHeld(new Aimbot(kTurret, kLimelight), true);
         */
 
-        /* jank
         pJoyPOVN.whenPressed(new RunTurret(kTurret, 0.0), true);
-        pJoyPOVE.whenPressed(new RunTurret(kTurret, 90.0), true);
-        pJoyPOVS.whenPressed(new RunTurret(kTurret, 180.0), true);
-        pJoyPOVW.whenPressed(new RunTurret(kTurret, -90.0), true);
-        */
+        pJoyPOVE.whenPressed(new RunTurret(kTurret, 45.0), true);
+        //pJoyPOVS.whenPressed(new RunTurret(kTurret, 180.0), true);
+        pJoyPOVW.whenPressed(new RunTurret(kTurret, -45.0), true);
 
         //pJoyRB.whileHeld(new RunTurret(kTurret, 180*(Math.atan2(-getJoyRightY(), getJoyRightX()))/2*Math.PI-90.0), true);
 
@@ -187,11 +185,11 @@ public class RobotContainer {
             .whileHeld(new RunLights(kLimelight, 3), false);
         */
         pJoyLBump.whileHeld(new TargetedShot(kShooter, kLimelight, Constants.bulletShot, 0.4), true)
-            .whileHeld(new RunKicker(kShooter, 0.4), true)
             .whileHeld(new Aimbot(kTurret, kLimelight), true)
             .whileHeld(new RunLights(kLimelight, 0), true);
         
         pJoyRBump.whileHeld(new RunFeeder(kFeeder, Roller.FRONT, 0.5), false)
+            .whileHeld(new RunKicker(kShooter, 0.75), true)
             .whileHeld(new RunFeeder(kFeeder, Roller.BACK, 0.5), false)
             .whileHeld(new RunFeeder(kFeeder, Roller.VERTICAL, 0.4), false);
         pJoyBStart.whileHeld(new RunShooter(kShooter, 2750.0), false);
