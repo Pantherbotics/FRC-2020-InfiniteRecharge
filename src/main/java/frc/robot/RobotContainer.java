@@ -58,20 +58,20 @@ public class RobotContainer {
     private final Joystick joy = new Joystick(Constants.joyID);
     private final Joystick pJoy = new Joystick(Constants.pJoyID);
 
-    private final JoystickButton joyBS = new JoystickButton(joy, 1); //Square
-    private final JoystickButton joyBX = new JoystickButton(joy, 2); //X
-    private final JoystickButton joyBC = new JoystickButton(joy, 3); //Circle
-    private final JoystickButton joyBT = new JoystickButton(joy, 4); //Triangle
+    private final JoystickButton joyBY = new JoystickButton(joy, 1); //Y
+    private final JoystickButton joyBB = new JoystickButton(joy, 2); //B
+    private final JoystickButton joyBA = new JoystickButton(joy, 3); //A
+    private final JoystickButton joyBX = new JoystickButton(joy, 4); //X
     private final JoystickButton joyLBump = new JoystickButton(joy, 5); //Left Bumper
     private final JoystickButton joyRBump = new JoystickButton(joy, 6); //Right Bumper
     private final JoystickButton joyLTrig = new JoystickButton(joy, 7); //Left Trigger
     private final JoystickButton joyRTrig = new JoystickButton(joy, 8); //Right Trigger
-    private final JoystickButton joyBShare = new JoystickButton(joy, 9); //Share Button
-    private final JoystickButton joyBOption = new JoystickButton(joy, 10); //Option Button
+    private final JoystickButton joyBMinus = new JoystickButton(joy, 9); //Minus Button (Switch Controller)
+    private final JoystickButton joyBPlus = new JoystickButton(joy, 10); //Plus  Button (Switch Controller)
     private final JoystickButton joyLB = new JoystickButton(joy, 11); //Left Joystick Button
     private final JoystickButton joyRB = new JoystickButton(joy, 12); //Right Joystick Button
-    private final JoystickButton joyBPS4 = new JoystickButton(joy, 13); //PS4 Button
-    private final JoystickButton joyBTrack = new JoystickButton(joy, 14); //Trackpad
+    private final JoystickButton joyBHome = new JoystickButton(joy, 13); //Home Button (Switch Controller)
+    private final JoystickButton joyBCircle = new JoystickButton(joy, 14); //Center Circle Button
     private final POVButton joyPOVN = new POVButton(joy, 0); //North
     private final POVButton joyPOVE = new POVButton(joy, 90); //East
     private final POVButton joyPOVS = new POVButton(joy, 180); //South
@@ -125,7 +125,8 @@ public class RobotContainer {
         //cam.enableCameras();
         //Drivetrain
         kDrivetrain.setDefaultCommand(new RunCommand(() -> 
-            kDrivetrain.setVelocity(Math.pow(getJoyLeftY(), 5D/3D), Math.pow(getJoyRightX(), 5D/3D)), kDrivetrain //Functional, not tuned
+            kDrivetrain.setVelocity(powAxis(getJoyLeftY(), 5D/3D), powAxis(getJoyRightX(), 5D/3D)), kDrivetrain //Functional, not tuned
+
         ));
         //Intaking
         joyLTrig.whileHeld(new RunIntake(kIntake, State.GROUND, 1.0, State.GROUND, 0.0), true)
@@ -169,10 +170,14 @@ public class RobotContainer {
         pJoyBX.whileHeld(new RunTurret(kTurret, 1.0), false);
         pJoyBStart.whileHeld(new Aimbot(kTurret, kLimelight), true);
         */
+
+        /* jank
         pJoyPOVN.whenPressed(new RunTurret(kTurret, 0.0), true);
         pJoyPOVE.whenPressed(new RunTurret(kTurret, 90.0), true);
         pJoyPOVS.whenPressed(new RunTurret(kTurret, 180.0), true);
         pJoyPOVW.whenPressed(new RunTurret(kTurret, -90.0), true);
+        */
+
         //pJoyRB.whileHeld(new RunTurret(kTurret, 180*(Math.atan2(-getJoyRightY(), getJoyRightX()))/2*Math.PI-90.0), true);
 
         /* Shooting
@@ -203,12 +208,20 @@ public class RobotContainer {
         pJoyBX.whenPressed(new RunHood(kShooter, -0.01), true);
 
         //Climber
-        joyBPS4.whileHeld(new RunClimb(kDrivetrain, 0.0, true, Value.kReverse, Value.kReverse));
-        joyBTrack.whileHeld(new RunClimb(kDrivetrain, 0.5, true, Value.kForward, Value.kReverse))
+        joyBHome.whileHeld(new RunClimb(kDrivetrain, 0.0, true, Value.kReverse, Value.kReverse));
+        joyBCircle.whileHeld(new RunClimb(kDrivetrain, 0.5, true, Value.kForward, Value.kReverse))
             .whileHeld(new CancelDrivetrain(kDrivetrain));
-        joyBShare.whileHeld(new RunClimb(kDrivetrain, -0.1, false, Value.kForward, Value.kReverse))
+        joyBMinus.whileHeld(new RunClimb(kDrivetrain, -0.1, false, Value.kForward, Value.kReverse))
             .whileHeld(new CancelDrivetrain(kDrivetrain));
         
+    }
+
+    public double powAxis(double a, double b) {
+        if (a >= 0) {
+            return Math.pow(a, b);
+        }else {
+            return -Math.pow(-a, b);
+        }
     }
 
     public double getJoyLeftX() {
