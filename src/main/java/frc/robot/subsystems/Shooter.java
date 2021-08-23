@@ -51,7 +51,7 @@ public class Shooter extends SubsystemBase {
     }
 
     public void setShootVel(double speed) {
-        mShootA.set(speed / 4000.0);
+        mShootA.set(speed / 4875); //Jake's Max: 4875         Matt's Max: 4000
         //mShootA.set((speed / 4000.0 + (speed - getShootSpeed()) / 1000) < 1.0 ? (speed / 4000.0 + (speed - getShootSpeed()) / 1000) : 1.0);
     }
 
@@ -65,8 +65,12 @@ public class Shooter extends SubsystemBase {
     }
 
     public boolean isReady(double speed) {
-        return Math.abs(speed - getShootSpeed()) < 50;
+        return getShootSpeed() >= speed;
     }
+
+    //public boolean isReady(double speed) {
+    //    return Math.abs(speed - getShootSpeed()) < 50;
+    //}
 
     public double getCurrent() {
         return mShootA.getOutputCurrent();

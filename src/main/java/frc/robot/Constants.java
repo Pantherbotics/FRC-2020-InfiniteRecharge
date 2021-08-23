@@ -81,7 +81,7 @@ public final class Constants {
     public static final double aimbotP = 0.15;
     public static final double aimbotD = 2.0;
     public static final double aimbotMax = 0.25;
-    public static final double bulletShot = 3000.0;
+    public static final double bulletShot = 3350.0;
 
     //Ramsete
     public static final double ramseteB = 2.0;

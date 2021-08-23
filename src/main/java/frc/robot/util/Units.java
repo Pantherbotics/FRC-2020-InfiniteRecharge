@@ -35,6 +35,6 @@ public class Units {
     }
 
     public static double target2Hood(double area, double pitch) {
-        return (-0.0079) * pitch + 0.7193; //Linear extrapolation
+        return (-0.0079) * pitch + 0.6793; //Linear extrapolation
     }
 }

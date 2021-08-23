@@ -11,6 +11,7 @@ import edu.wpi.first.wpilibj.GenericHID;
 import edu.wpi.first.wpilibj.Joystick;
 import edu.wpi.first.wpilibj.XboxController;
 import edu.wpi.first.wpilibj.DoubleSolenoid.Value;
+import edu.wpi.first.wpilibj.shuffleboard.Shuffleboard;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj.trajectory.TrajectoryConfig;
 import edu.wpi.first.wpilibj.trajectory.constraint.DifferentialDriveVoltageConstraint;
@@ -125,7 +126,7 @@ public class RobotContainer {
         //cam.enableCameras();
         //Drivetrain
         kDrivetrain.setDefaultCommand(new RunCommand(() -> 
-            kDrivetrain.setVelocity(powAxis(getJoyLeftY(), 5D/3D), powAxis(getJoyRightX(), 5D/3D)), kDrivetrain //Functional, not tuned
+            kDrivetrain.setVelocity(powAxis(getJoyLeftY(), 7D/3D), getJoyRightX()/2D), kDrivetrain //Functional, not tuned
 
         ));
         //Intaking
@@ -192,7 +193,8 @@ public class RobotContainer {
             .whileHeld(new RunKicker(kShooter, 0.75), true)
             .whileHeld(new RunFeeder(kFeeder, Roller.BACK, 0.5), false)
             .whileHeld(new RunFeeder(kFeeder, Roller.VERTICAL, 0.4), false);
-        pJoyBStart.whileHeld(new RunShooter(kShooter, 2750.0), false);
+
+        pJoyBStart.whileHeld(new RunShooter(kShooter, 4000), false); // "Full"
         //pJoyBStart.whileHeld(new RunShooter(kShooter, 2000.0), false);
         pJoyBBack.whileHeld(new RunShooter(kShooter, 0.0), true);
         pJoyLB.whileHeld(new RunLights(kLimelight, 0), true);
@@ -254,14 +256,14 @@ public class RobotContainer {
         SmartDashboard.putNumber("Shooter Speed", kShooter.getShootSpeed());
         SmartDashboard.putNumber("Shooter Current", kShooter.getCurrent());
         SmartDashboard.putNumber("Hood Pos", kShooter.getHood()[0]);
-        SmartDashboard.putNumber("HoodPos again", kShooter.getHood()[1]);
-        SmartDashboard.putBoolean("Shooter Ready?", kShooter.isReady(Constants.bulletShot));
+        //SmartDashboard.putNumber("HoodPos again", kShooter.getHood()[1]);
+        SmartDashboard.putBoolean("Shooter Ready?", kShooter.isReady(2800));
 
         SmartDashboard.putNumber("Turret Pos Raw", kTurret.getPosRaw());
         SmartDashboard.putNumber("Turret Pos", kTurret.getPos());
         SmartDashboard.putNumber("Turret Velocity", kTurret.getVelocity());
         SmartDashboard.putNumber("Turret Current", kTurret.getCurrent());
-        SmartDashboard.putBoolean("Mag Sensor", kTurret.getMagSensor());
+        //SmartDashboard.putBoolean("Mag Sensor", kTurret.getMagSensor());
         SmartDashboard.putNumber("Turret Angle", kTurret.getAngle());
 
         SmartDashboard.putNumber("Lime Pitch", kLimelight.getTarget().pitch);
@@ -270,5 +272,8 @@ public class RobotContainer {
 
         SmartDashboard.putBoolean("Hook", kDrivetrain.getHook());
         SmartDashboard.putString("Shifter", kDrivetrain.getPTO().toString());
+
+        SmartDashboard.putBoolean("Shot Area", kLimelight.getTarget().area > 0.05);
+        SmartDashboard.putBoolean("Shot Yaw", (Math.abs(kLimelight.getTarget().yaw) < 0.65));
     }
 }

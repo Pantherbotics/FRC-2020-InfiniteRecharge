@@ -21,7 +21,7 @@ public class RunShooter extends CommandBase {
     @Override
     public void execute() {
         //System.out.println("help");
-        kShooter.setShooter(speed);
+        kShooter.setShootVel(speed);
         //kShooter.setShootVel(speed);
         //kShooter.setShootVolt(speed);
     }
