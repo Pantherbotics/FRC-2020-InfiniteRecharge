@@ -19,7 +19,7 @@ public final class Constants {
     public static final int joyLX = 0;
     public static final int joyLY = 1;
     public static final int joyRX = 2;
-    public static final int joyRY = 3; //5
+    public static final int joyRY = 5;
     public static final double deadband = 0.05;
     
     //Talon IDs
