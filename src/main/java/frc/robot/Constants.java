@@ -38,9 +38,8 @@ public final class Constants {
     public static final int ppID = 9;
 
     //Solenoid IDs
-    //public static final int ptoForwardID = 1;
-    //public static final int ptoReverseID = 0;
-    public static final int ptoShifterID = 0;
+    public static final int ptoForwardID = 1;
+    public static final int ptoReverseID = 0;
     public static final int climbHookID = 4;
     public static final int intakeMainID = 2;
     public static final int intakeSubID = 3;
