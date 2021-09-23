@@ -10,7 +10,6 @@ package frc.robot;
 import edu.wpi.first.wpilibj.GenericHID;
 import edu.wpi.first.wpilibj.Joystick;
 import edu.wpi.first.wpilibj.XboxController;
-import edu.wpi.first.wpilibj.DoubleSolenoid.Value;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj.trajectory.TrajectoryConfig;
 import edu.wpi.first.wpilibj.trajectory.constraint.DifferentialDriveVoltageConstraint;
@@ -207,10 +206,10 @@ public class RobotContainer {
         pJoyBX.whenPressed(new RunHood(kShooter, -0.01), true);
 
         //Climber
-        joyBHome.whileHeld(new RunClimb(kDrivetrain, 0.0, true, Value.kReverse, Value.kReverse));
-        joyBCircle.whileHeld(new RunClimb(kDrivetrain, 0.5, true, Value.kForward, Value.kReverse))
+        joyBHome.whileHeld(new RunClimb(kDrivetrain, 0.0, true));
+        joyBCircle.whileHeld(new RunClimb(kDrivetrain, 0.5, true))
             .whileHeld(new CancelDrivetrain(kDrivetrain));
-        joyBMinus.whileHeld(new RunClimb(kDrivetrain, -0.1, false, Value.kForward, Value.kReverse))
+        joyBMinus.whileHeld(new RunClimb(kDrivetrain, -0.1, false))
             .whileHeld(new CancelDrivetrain(kDrivetrain));
         
     }
@@ -241,7 +240,7 @@ public class RobotContainer {
 
     public void whenDisabled() {
         kDrivetrain.shiftClimbHook(false);
-        kDrivetrain.shiftPTO(Value.kReverse);
+        kDrivetrain.shiftPTO(false);
         kLimelight.setLights(1);
     }
 
@@ -270,7 +269,7 @@ public class RobotContainer {
         SmartDashboard.putNumber("Lime Area", kLimelight.getTarget().area);
 
         SmartDashboard.putBoolean("Hook", kDrivetrain.getHook());
-        SmartDashboard.putString("Shifter", kDrivetrain.getPTO().toString());
+        SmartDashboard.putString("Shifter", Boolean.toString(kDrivetrain.getPTO()));
 
         SmartDashboard.putBoolean("Shot Area", kLimelight.getTarget().area > 0.05);
         SmartDashboard.putBoolean("Shot Yaw", (Math.abs(kLimelight.getTarget().yaw) < 0.65));
