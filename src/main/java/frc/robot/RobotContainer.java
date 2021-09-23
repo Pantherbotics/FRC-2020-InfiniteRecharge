@@ -65,12 +65,12 @@ public class RobotContainer {
     private final JoystickButton joyRBump = new JoystickButton(joy, 6); //Right Bumper
     private final JoystickButton joyLTrig = new JoystickButton(joy, 7); //Left Trigger
     private final JoystickButton joyRTrig = new JoystickButton(joy, 8); //Right Trigger
-    private final JoystickButton joyBMinus = new JoystickButton(joy, 9); //Minus Button (Switch Controller)
-    private final JoystickButton joyBPlus = new JoystickButton(joy, 10); //Plus  Button (Switch Controller)
+    private final JoystickButton joyBShare = new JoystickButton(joy, 9); //Share Button (PS4 Controller)
+    private final JoystickButton joyBOptions = new JoystickButton(joy, 10); //Options  Button (PS4 Controller)
     private final JoystickButton joyLB = new JoystickButton(joy, 11); //Left Joystick Button
     private final JoystickButton joyRB = new JoystickButton(joy, 12); //Right Joystick Button
-    private final JoystickButton joyBHome = new JoystickButton(joy, 13); //Home Button (Switch Controller)
-    private final JoystickButton joyBCircle = new JoystickButton(joy, 14); //Center Circle Button
+    private final JoystickButton joyBPS4 = new JoystickButton(joy, 13); //PS4 Button (PS4 Controller)
+    private final JoystickButton joyBPad = new JoystickButton(joy, 14); //Pad Button
     private final POVButton joyPOVN = new POVButton(joy, 0); //North
     private final POVButton joyPOVE = new POVButton(joy, 90); //East
     private final POVButton joyPOVS = new POVButton(joy, 180); //South
@@ -206,10 +206,10 @@ public class RobotContainer {
         pJoyBX.whenPressed(new RunHood(kShooter, -0.01), true);
 
         //Climber
-        joyBHome.whileHeld(new RunClimb(kDrivetrain, 0.0, true));
-        joyBCircle.whileHeld(new RunClimb(kDrivetrain, 0.5, true))
+        joyBPS4.whileHeld(new RunClimb(kDrivetrain, 0.0, true));
+        joyBPad.whileHeld(new RunClimb(kDrivetrain, 0.5, true))
             .whileHeld(new CancelDrivetrain(kDrivetrain));
-        joyBMinus.whileHeld(new RunClimb(kDrivetrain, -0.1, false))
+        joyBShare.whileHeld(new RunClimb(kDrivetrain, -0.1, false))
             .whileHeld(new CancelDrivetrain(kDrivetrain));
         
     }
