@@ -8,20 +8,17 @@ public class RunClimb extends CommandBase {
     private final Drivetrain kDrivetrain;
     private final double power;
     private final boolean hookOn;
-    private final Value shiftOn, endShift;
 
-    public RunClimb(Drivetrain kDrivetrain, double power, boolean hookOn, Value shiftOn, Value endShift) {
+    public RunClimb(Drivetrain kDrivetrain, double power, boolean hookOn) {
         this.kDrivetrain = kDrivetrain;
         this.power = power;
         this.hookOn = hookOn;
-        this.shiftOn = shiftOn;
-        this.endShift = endShift;
     }
 
     @Override
     public void initialize() {
         kDrivetrain.shiftClimbHook(hookOn);
-        kDrivetrain.shiftPTO(shiftOn);
+        kDrivetrain.shiftPTO(true);
     }
 
     @Override
@@ -31,6 +28,6 @@ public class RunClimb extends CommandBase {
 
     @Override
     public void end(boolean interrupted) {
-        kDrivetrain.shiftPTO(endShift);
+        kDrivetrain.shiftPTO(false);
     }
 }
