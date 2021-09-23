@@ -206,10 +206,11 @@ public class RobotContainer {
         pJoyBX.whenPressed(new RunHood(kShooter, -0.01), true);
 
         //Climber
-        joyBPS4.whileHeld(new RunClimb(kDrivetrain, 0.0, true));
-        joyBPad.whileHeld(new RunClimb(kDrivetrain, 0.5, true))
-            .whileHeld(new CancelDrivetrain(kDrivetrain));
-        joyBShare.whileHeld(new RunClimb(kDrivetrain, -0.1, false))
+        joyBPS4.whileHeld(new RunClimb(kDrivetrain, 0.0, true, false));
+        //joyBPad.whileHeld(new RunClimb(kDrivetrain, 0.5, true, false))
+        //    .whileHeld(new CancelDrivetrain(kDrivetrain));
+        joyBPad.whileHeld(new CancelDrivetrain(kDrivetrain));
+        joyBShare.whileHeld(new RunClimb(kDrivetrain, -0.1, false, false))
             .whileHeld(new CancelDrivetrain(kDrivetrain));
         
     }

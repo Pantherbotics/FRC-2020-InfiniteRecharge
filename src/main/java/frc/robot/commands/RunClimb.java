@@ -1,23 +1,24 @@
 package frc.robot.commands;
 
-import edu.wpi.first.wpilibj.DoubleSolenoid.Value;
 import edu.wpi.first.wpilibj2.command.CommandBase;
 import frc.robot.subsystems.Drivetrain;
 
 public class RunClimb extends CommandBase {
     private final Drivetrain kDrivetrain;
     private final double power;
-    private final boolean hookOn;
+    private final boolean hookStart;
+    private final boolean hookEnd;
 
-    public RunClimb(Drivetrain kDrivetrain, double power, boolean hookOn) {
+    public RunClimb(Drivetrain kDrivetrain, double power, boolean hookStart, boolean hookEnd) {
         this.kDrivetrain = kDrivetrain;
         this.power = power;
-        this.hookOn = hookOn;
+        this.hookStart = hookStart;
+        this.hookEnd = hookEnd;
     }
 
     @Override
     public void initialize() {
-        kDrivetrain.shiftClimbHook(hookOn);
+        kDrivetrain.shiftClimbHook(hookStart);
         kDrivetrain.shiftPTO(true);
     }
 
@@ -29,5 +30,6 @@ public class RunClimb extends CommandBase {
     @Override
     public void end(boolean interrupted) {
         kDrivetrain.shiftPTO(false);
+        kDrivetrain.shiftClimbHook(hookEnd);
     }
 }
