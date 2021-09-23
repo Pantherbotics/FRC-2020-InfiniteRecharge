@@ -7,9 +7,11 @@ import com.revrobotics.ControlType;
 import com.revrobotics.EncoderType;
 import com.revrobotics.CANSparkMaxLowLevel.MotorType;
 
+import edu.wpi.first.wpilibj.DoubleSolenoid;
 import edu.wpi.first.wpilibj.I2C;
 import edu.wpi.first.wpilibj.Notifier;
 import edu.wpi.first.wpilibj.Solenoid;
+import edu.wpi.first.wpilibj.DoubleSolenoid.Value;
 import edu.wpi.first.wpilibj.geometry.Pose2d;
 import edu.wpi.first.wpilibj.geometry.Rotation2d;
 import edu.wpi.first.wpilibj.kinematics.DifferentialDriveWheelSpeeds;
@@ -31,8 +33,7 @@ public class Drivetrain extends SubsystemBase {
     private final CANEncoder RBEncoder = mRightB.getEncoder(EncoderType.kHallSensor, 1);
 
     private final Solenoid climbHook = new Solenoid(Constants.climbHookID);
-    //private final DoubleSolenoid ptoShifter = new DoubleSolenoid(Constants.ptoForwardID, Constants.ptoReverseID);
-    private final Solenoid ptoShifter = new Solenoid(Constants.ptoShifterID);
+    private final DoubleSolenoid ptoShifter = new DoubleSolenoid(Constants.ptoForwardID, Constants.ptoReverseID);
 
     private final AHRS gyro = new AHRS(I2C.Port.kOnboard);
 
@@ -80,7 +81,7 @@ public class Drivetrain extends SubsystemBase {
         theta = 0;
 
         shiftClimbHook(false);
-        shiftPTO(false);
+        shiftPTO(Value.kReverse);
         
 
         Notifier odomLoop = new Notifier(() -> {
@@ -164,11 +165,11 @@ public class Drivetrain extends SubsystemBase {
     }
 
     //Climber
-    public void shiftPTO(boolean on) { //1: Forward, 2: Off, 3: Reverse
-        ptoShifter.set(on);
-        if (on) {
+    public void shiftPTO(DoubleSolenoid.Value val) { //1: Forward, 2: Off, 3: Reverse
+        ptoShifter.set(val);
+        if (val == Value.kForward) {
             cancel = 0;
-        }else {
+        } else {
             cancel = 1;
         }
     }
@@ -177,7 +178,7 @@ public class Drivetrain extends SubsystemBase {
         climbHook.set(on);
     }
 
-    public boolean getPTO() {
+    public Value getPTO() {
         return ptoShifter.get();
     }
 
