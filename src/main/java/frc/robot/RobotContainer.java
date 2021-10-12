@@ -124,7 +124,7 @@ public class RobotContainer {
         //cam.enableCameras();
         //Drivetrain
         kDrivetrain.setDefaultCommand(new RunCommand(() -> 
-            kDrivetrain.setVelocity(powAxis(getJoyLeftY(), 7D/3D), getJoyRightX()/2D), kDrivetrain //Functional, not tuned
+            kDrivetrain.setVelocity(powAxis(getJoyLeftY(), 7D/3D) * 0.65D, getJoyRightX()/2.25D), kDrivetrain //Functional, not tuned
 
         ));
         //Intaking
@@ -188,7 +188,7 @@ public class RobotContainer {
             .whileHeld(new RunLights(kLimelight, 0), true);
         
         pJoyRBump.whileHeld(new RunFeeder(kFeeder, Roller.FRONT, 0.5), false)
-            .whileHeld(new RunKicker(kShooter, 0.75), true)
+            .whileHeld(new RunKicker(kShooter, 1.0), true)
             .whileHeld(new RunFeeder(kFeeder, Roller.BACK, 0.5), false)
             .whileHeld(new RunFeeder(kFeeder, Roller.VERTICAL, 0.4), false);
 
