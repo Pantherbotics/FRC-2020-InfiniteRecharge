@@ -166,11 +166,11 @@ public class Drivetrain extends SubsystemBase {
     //Climber
     public void shiftPTO(boolean on) { //1: Forward, 2: Off, 3: Reverse
         ptoShifter.set(on);
-        if (on) {
-            cancel = 0;
-        }else {
-            cancel = 1;
-        }
+        //if (on) {
+        //    cancel = 0;
+        //}else {
+        //    cancel = 1;
+        //}
     }
 
     public void shiftClimbHook(boolean on) {

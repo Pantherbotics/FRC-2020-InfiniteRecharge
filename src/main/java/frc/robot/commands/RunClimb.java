@@ -19,7 +19,7 @@ public class RunClimb extends CommandBase {
     @Override
     public void initialize() {
         kDrivetrain.shiftClimbHook(hookStart);
-        kDrivetrain.shiftPTO(true);
+        kDrivetrain.shiftPTO(false);
     }
 
     @Override
@@ -29,7 +29,7 @@ public class RunClimb extends CommandBase {
 
     @Override
     public void end(boolean interrupted) {
-        kDrivetrain.shiftPTO(false);
+        kDrivetrain.shiftPTO(true);
         kDrivetrain.shiftClimbHook(hookEnd);
     }
 }

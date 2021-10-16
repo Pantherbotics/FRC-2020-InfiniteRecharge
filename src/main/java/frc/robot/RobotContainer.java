@@ -34,7 +34,7 @@ import frc.robot.util.*;
 @SuppressWarnings("unused")
 public class RobotContainer {
     // The robot's subsystems and commands are defined here...
-    private final Drivetrain kDrivetrain = new Drivetrain();
+    public final Drivetrain kDrivetrain = new Drivetrain();
     private final Intake kIntake = new Intake();
     private final Feeder kFeeder = new Feeder();
     private final Shooter kShooter = new Shooter();
@@ -57,10 +57,10 @@ public class RobotContainer {
     private final Joystick joy = new Joystick(Constants.joyID);
     private final Joystick pJoy = new Joystick(Constants.pJoyID);
 
-    private final JoystickButton joyBY = new JoystickButton(joy, 1); //Y
-    private final JoystickButton joyBB = new JoystickButton(joy, 2); //B
-    private final JoystickButton joyBA = new JoystickButton(joy, 3); //A
-    private final JoystickButton joyBX = new JoystickButton(joy, 4); //X
+    private final JoystickButton joyBSquare =   new JoystickButton(joy, 1); //Square
+    private final JoystickButton joyBX =        new JoystickButton(joy, 2); //X
+    private final JoystickButton joyBCircle =   new JoystickButton(joy, 3); //Circle
+    private final JoystickButton joyBTriangle = new JoystickButton(joy, 4); //Triangle
     private final JoystickButton joyLBump = new JoystickButton(joy, 5); //Left Bumper
     private final JoystickButton joyRBump = new JoystickButton(joy, 6); //Right Bumper
     private final JoystickButton joyLTrig = new JoystickButton(joy, 7); //Left Trigger
@@ -125,8 +125,12 @@ public class RobotContainer {
         //Drivetrain
         kDrivetrain.setDefaultCommand(new RunCommand(() -> 
             kDrivetrain.setVelocity(powAxis(getJoyLeftY(), 7D/3D) * 0.65D, getJoyRightX()/2.25D), kDrivetrain //Functional, not tuned
-
         ));
+
+        joyBTriangle.whenPressed(new RunShiftPTO(kDrivetrain, true));
+        joyBX.whenPressed(new RunShiftPTO(kDrivetrain, false));
+
+
         //Intaking
         joyLTrig.whileHeld(new RunIntake(kIntake, State.GROUND, 1.0, State.GROUND, 0.0), true)
             .whileHeld(new RunFeeder(kFeeder, Roller.VERTICAL, 0.6), false)
