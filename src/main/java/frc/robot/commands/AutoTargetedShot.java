@@ -31,14 +31,14 @@ public class AutoTargetedShot extends CommandBase {
     @Override
     public void execute() {
         t = kLimelight.getTarget();
-        kShooter.setKicker(0.75);
-        if ((t.area > 0.05) && (Math.abs(t.yaw) < 0.5)) {
+        if ((t.area > 0.05) && (Math.abs(t.yaw) < 0.65)) {
             kShooter.setShootVel(shotPower);
         }
         kShooter.setHood(Units.target2Hood(t.area, t.pitch));
-        if (Math.abs(kShooter.getShootSpeed() - shotPower) < 50) {
-            kFeeder.powerFront(0.3);
-            kFeeder.powerBackBelt(0.3);
+        if (kShooter.isReady(2800)) {
+            kFeeder.powerFront(0.4);
+            kFeeder.powerBackBelt(0.5);
+            kShooter.setKicker(1.0);
         }
     }
 

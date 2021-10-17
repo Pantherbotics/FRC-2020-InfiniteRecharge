@@ -127,10 +127,6 @@ public class RobotContainer {
             kDrivetrain.setVelocity(powAxis(getJoyLeftY(), 7D/3D) * 0.65D, getJoyRightX()/2.25D), kDrivetrain //Functional, not tuned
         ));
 
-        joyBTriangle.whenPressed(new RunShiftPTO(kDrivetrain, true));
-        joyBX.whenPressed(new RunShiftPTO(kDrivetrain, false));
-
-
         //Intaking
         joyLTrig.whileHeld(new RunIntake(kIntake, State.GROUND, 1.0, State.GROUND, 0.0), true)
             .whileHeld(new RunFeeder(kFeeder, Roller.VERTICAL, 0.6), false)
@@ -210,13 +206,12 @@ public class RobotContainer {
         pJoyBX.whenPressed(new RunHood(kShooter, -0.01), true);
 
         //Climber
-        joyBPS4.whileHeld(new RunClimb(kDrivetrain, 0.0, true, false));
-        joyBPad.whileHeld(new RunClimb(kDrivetrain, 0.5, true, false)) //0.5 = climb
+        joyBPS4.whileHeld(new RunClimb(kDrivetrain, 0.0, true, false, false, false));
+        joyBPad.whileHeld(new RunClimb(kDrivetrain, 0.75, true, false, true, false)) //0.5 = climb
             .whileHeld(new CancelDrivetrain(kDrivetrain));
         //joyBPad.whileHeld(new CancelDrivetrain(kDrivetrain));
-        joyBShare.whileHeld(new RunClimb(kDrivetrain, -0.1, false, false)) //-0.1 = slowly un-climb
+        joyBShare.whileHeld(new RunClimb(kDrivetrain, -0.1, false, false, true, false)) //-0.1 = slowly un-climb
             .whileHeld(new CancelDrivetrain(kDrivetrain));
-        
     }
 
     public double powAxis(double a, double b) {
@@ -274,7 +269,7 @@ public class RobotContainer {
         SmartDashboard.putNumber("Lime Area", kLimelight.getTarget().area);
 
         SmartDashboard.putBoolean("Hook", kDrivetrain.getHook());
-        SmartDashboard.putString("Shifter", Boolean.toString(kDrivetrain.getPTO()));
+        SmartDashboard.putBoolean("Shifter", kDrivetrain.getPTO());
 
         SmartDashboard.putBoolean("Shot Area", kLimelight.getTarget().area > 0.05);
         SmartDashboard.putBoolean("Shot Yaw", (Math.abs(kLimelight.getTarget().yaw) < 0.65));

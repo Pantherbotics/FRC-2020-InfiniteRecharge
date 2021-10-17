@@ -121,6 +121,26 @@ public class AutoPaths {
                 )
             )
         );
+
+        trajs.add(
+            new NamedCommand(
+                "EZ 5 Points",
+                    new ParallelDeadlineGroup(
+                            new RunTimer(13.0),
+                            new RunLights(kLimelight, 0),
+                            new Aimbot(kTurret, kLimelight),
+                            new AutoTargetedShot(kShooter, kFeeder, kLimelight, Constants.bulletShot, 0.0)
+                    ).andThen(
+                        new ParallelDeadlineGroup(
+                            new RunTimer(1.0),
+                            new RunCommand(() -> kDrivetrain.setVelocity(0.15, 0.0), kDrivetrain)
+                        )
+                    ).andThen(
+                        new RunCommand(() -> kDrivetrain.setVelocity(0.0, 0.0), kDrivetrain)
+                    )
+            )
+        );
+
 /*
         trajs.add(
             new Path(
