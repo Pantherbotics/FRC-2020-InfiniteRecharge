@@ -207,7 +207,7 @@ public class RobotContainer {
 
         //Climber
         joyBPS4.whileHeld(new RunClimb(kDrivetrain, 0.0, true, false, false, false));
-        joyBPad.whileHeld(new RunClimb(kDrivetrain, 0.75, true, false, true, false)) //0.5 = climb
+        joyBPad.whileHeld(new RunClimb(kDrivetrain, 0.5, true, false, true, false)) //0.5 = climb
             .whileHeld(new CancelDrivetrain(kDrivetrain));
         //joyBPad.whileHeld(new CancelDrivetrain(kDrivetrain));
         joyBShare.whileHeld(new RunClimb(kDrivetrain, -0.1, false, false, true, false)) //-0.1 = slowly un-climb
