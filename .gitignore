@@ -159,3 +159,14 @@ imgui.ini
 
 
 # End of https://www.gitignore.io/api/c++,java,linux,macos,gradle,windows,visualstudiocode
+.idea/compiler.xml
+.idea/gradle.xml
+.idea/inspectionProfiles/Project_Default.xml
+.idea/jarRepositories.xml
+.idea/misc.xml
+.idea/modules/FRC-2020-InfiniteRecharge.iml
+.idea/modules/FRC-2020-InfiniteRecharge.main.iml
+.idea/runConfigurations.xml
+.idea/vcs.xml
+src/main/java/frc/robot/RobotContainer.java
+.idea/workspace.xml

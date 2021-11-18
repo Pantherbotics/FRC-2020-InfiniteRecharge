@@ -5,8 +5,8 @@ import frc.robot.subsystems.Shooter;
 
 public class RunShooter extends CommandBase {
 
-    private Shooter kShooter;
-    private double speed;
+    private final Shooter kShooter;
+    private final double speed;
 
     public RunShooter(Shooter kShooter, double spd) {
         //hasRequirement(kShooter);
@@ -21,7 +21,7 @@ public class RunShooter extends CommandBase {
     @Override
     public void execute() {
         //System.out.println("help");
-        kShooter.setShooter(speed);
+        kShooter.setShootVel(speed);
         //kShooter.setShootVel(speed);
         //kShooter.setShootVolt(speed);
     }

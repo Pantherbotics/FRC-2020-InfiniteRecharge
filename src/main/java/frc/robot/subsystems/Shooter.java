@@ -4,7 +4,6 @@ import com.ctre.phoenix.motorcontrol.ControlMode;
 import com.ctre.phoenix.motorcontrol.can.VictorSPX;
 import com.revrobotics.CANEncoder;
 import com.revrobotics.CANSparkMax;
-import com.revrobotics.ControlType;
 import com.revrobotics.EncoderType;
 import com.revrobotics.CANSparkMaxLowLevel.MotorType;
 
@@ -13,21 +12,22 @@ import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.Constants;
 
 /*
-    I profusely apologize for the inveitable failures of this shooter subsystem
+    I profusely apologize for the inevitable failures of this shooter subsystem
 
     If I get it right though I'm a god
 
         -Matthew, 1/29/20
 */
 
+@SuppressWarnings("unused")
 public class Shooter extends SubsystemBase {
-    private CANSparkMax mShootA = new CANSparkMax(Constants.shootAID, MotorType.kBrushless);
-    private CANSparkMax mShootB = new CANSparkMax(Constants.shootBID, MotorType.kBrushless);
-    private VictorSPX mKick = new VictorSPX(Constants.kickID);
-    private PWM servoA = new PWM(0);
-    private PWM servoB = new PWM(1);
+    private final CANSparkMax mShootA = new CANSparkMax(Constants.shootAID, MotorType.kBrushless);
+    private final CANSparkMax mShootB = new CANSparkMax(Constants.shootBID, MotorType.kBrushless);
+    private final VictorSPX mKick = new VictorSPX(Constants.kickID);
+    private final PWM servoA = new PWM(0);
+    private final PWM servoB = new PWM(1);
 
-    private CANEncoder shootEncoder = mShootA.getEncoder(EncoderType.kHallSensor, 1);
+    private final CANEncoder shootEncoder = mShootA.getEncoder(EncoderType.kHallSensor, 1);
     //private CANEncoder BEncoder = mShootB.getEncoder(EncoderType.kHallSensor, 1);
 
     public Shooter() {
@@ -51,7 +51,7 @@ public class Shooter extends SubsystemBase {
     }
 
     public void setShootVel(double speed) {
-        mShootA.set(speed / 4000.0);
+        mShootA.set(speed / 4875); //Jake's Max: 4875         Matt's Max: 4000
         //mShootA.set((speed / 4000.0 + (speed - getShootSpeed()) / 1000) < 1.0 ? (speed / 4000.0 + (speed - getShootSpeed()) / 1000) : 1.0);
     }
 
@@ -65,8 +65,12 @@ public class Shooter extends SubsystemBase {
     }
 
     public boolean isReady(double speed) {
-        return Math.abs(speed - getShootSpeed()) < 50;
+        return getShootSpeed() >= speed;
     }
+
+    //public boolean isReady(double speed) {
+    //    return Math.abs(speed - getShootSpeed()) < 50;
+    //}
 
     public double getCurrent() {
         return mShootA.getOutputCurrent();

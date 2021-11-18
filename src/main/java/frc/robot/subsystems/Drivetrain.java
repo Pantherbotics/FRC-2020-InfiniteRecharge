@@ -5,14 +5,11 @@ import com.revrobotics.CANEncoder;
 import com.revrobotics.CANSparkMax;
 import com.revrobotics.ControlType;
 import com.revrobotics.EncoderType;
-import com.revrobotics.CANSparkMax.SoftLimitDirection;
 import com.revrobotics.CANSparkMaxLowLevel.MotorType;
 
-import edu.wpi.first.wpilibj.DoubleSolenoid;
 import edu.wpi.first.wpilibj.I2C;
 import edu.wpi.first.wpilibj.Notifier;
 import edu.wpi.first.wpilibj.Solenoid;
-import edu.wpi.first.wpilibj.DoubleSolenoid.Value;
 import edu.wpi.first.wpilibj.geometry.Pose2d;
 import edu.wpi.first.wpilibj.geometry.Rotation2d;
 import edu.wpi.first.wpilibj.kinematics.DifferentialDriveWheelSpeeds;
@@ -20,50 +17,62 @@ import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.Constants;
 import frc.robot.util.Units;
 
+@SuppressWarnings("unused")
 public class Drivetrain extends SubsystemBase {
 
-    private CANSparkMax mRightA = new CANSparkMax(Constants.rightDriveAID, MotorType.kBrushless);
-    private CANSparkMax mRightB = new CANSparkMax(Constants.rightDriveBID, MotorType.kBrushless);
-    private CANSparkMax mLeftA = new CANSparkMax(Constants.leftDriveAID, MotorType.kBrushless);
-    private CANSparkMax mLeftB = new CANSparkMax(Constants.leftDriveBID, MotorType.kBrushless);
+    private final CANSparkMax mLeftA = new CANSparkMax(Constants.leftDriveAID, MotorType.kBrushless);
+    private final CANSparkMax mLeftB = new CANSparkMax(Constants.leftDriveBID, MotorType.kBrushless);
+    private final CANSparkMax mRightA = new CANSparkMax(Constants.rightDriveAID, MotorType.kBrushless);
+    private final CANSparkMax mRightB = new CANSparkMax(Constants.rightDriveBID, MotorType.kBrushless);
 
-    private CANEncoder rightEncoder = mRightA.getEncoder(EncoderType.kHallSensor, 1);
-    private CANEncoder leftEncoder = mLeftA.getEncoder(EncoderType.kHallSensor, 1);
-    private CANEncoder LBEncoder = mRightB.getEncoder(EncoderType.kHallSensor, 1);
-    private CANEncoder RBEncoder = mLeftB.getEncoder(EncoderType.kHallSensor, 1);
+    private final CANEncoder leftEncoder = mLeftA.getEncoder(EncoderType.kHallSensor, 1);
+    private final CANEncoder rightEncoder = mRightA.getEncoder(EncoderType.kHallSensor, 1);
+    private final CANEncoder LBEncoder = mLeftB.getEncoder(EncoderType.kHallSensor, 1);
+    private final CANEncoder RBEncoder = mRightB.getEncoder(EncoderType.kHallSensor, 1);
 
-    private Solenoid climbHook = new Solenoid(Constants.climbHookID);
-    private DoubleSolenoid ptoShifter = new DoubleSolenoid(Constants.ptoForwardID, Constants.ptoReverseID);
+    private final Solenoid climbHook = new Solenoid(Constants.climbHookID);
+    //private final DoubleSolenoid ptoShifter = new DoubleSolenoid(Constants.ptoForwardID, Constants.ptoReverseID);
+    private final Solenoid ptoShifter = new Solenoid(Constants.ptoShifterID);
 
-    private AHRS gyro = new AHRS(I2C.Port.kOnboard);
+    private final AHRS gyro = new AHRS(I2C.Port.kOnboard);
 
-    private int driveID = 0;
-    private int climbID = 1;
     private int cancel = 1;
 
     private double lastPos, currentPos, dPos, x, y, theta;
 
     public Drivetrain() {
+        int driveID = 0;
+        mLeftA.getPIDController().setP(Constants.driveP, driveID);
+        mLeftA.getPIDController().setI(Constants.driveI, driveID);
+        mLeftA.getPIDController().setD(Constants.driveD, driveID);
+        mLeftA.getPIDController().setFF(Constants.driveFF, driveID);
+
         mRightA.getPIDController().setP(Constants.driveP, driveID);
         mRightA.getPIDController().setI(Constants.driveI, driveID);
         mRightA.getPIDController().setD(Constants.driveD, driveID);
         mRightA.getPIDController().setFF(Constants.driveFF, driveID);
 
-        mLeftA.getPIDController().setP(Constants.driveP, driveID);
-        mLeftA.getPIDController().setI(Constants.driveI, driveID);
-        mLeftA.getPIDController().setD(Constants.driveD, driveID);
-        mLeftA.getPIDController().setFF(Constants.driveFF, driveID);
+        int climbID = 1;
+        mLeftA.getPIDController().setP(Constants.climbP, climbID);
+        mLeftA.getPIDController().setI(Constants.climbI, climbID);
+        mLeftA.getPIDController().setD(Constants.climbD, climbID);
         
-        mRightA.setIdleMode(CANSparkMax.IdleMode.kCoast);
-        mRightB.setIdleMode(CANSparkMax.IdleMode.kCoast);
+        mRightA.getPIDController().setP(Constants.climbP, climbID);
+        mRightA.getPIDController().setI(Constants.climbI, climbID);
+        mRightA.getPIDController().setD(Constants.climbD, climbID);
+
         mLeftA.setIdleMode(CANSparkMax.IdleMode.kCoast);
         mLeftB.setIdleMode(CANSparkMax.IdleMode.kCoast);
+        mRightA.setIdleMode(CANSparkMax.IdleMode.kCoast);
+        mRightB.setIdleMode(CANSparkMax.IdleMode.kCoast);
 
-        mRightA.setInverted(true);
-        mLeftA.setInverted(false);
+        mLeftA.setInverted(true);
+        mLeftB.setInverted(true);
+        mRightA.setInverted(false);
+        mRightB.setInverted(false);
 
-        mRightB.follow(mRightA, false);
-        mLeftB.follow(mLeftA, false);
+        mLeftB.follow(mLeftA);
+        mRightB.follow(mRightA);
 
         lastPos = 0;
         x = 0;
@@ -71,12 +80,11 @@ public class Drivetrain extends SubsystemBase {
         theta = 0;
 
         shiftClimbHook(false);
-        shiftPTO(Value.kReverse);
-        zeroGyro();
+        shiftPTO(false);
         
 
         Notifier odomLoop = new Notifier(() -> {
-            currentPos = (rightEncoder.getPosition() + leftEncoder.getPosition()) / 2;
+            //currentPos = (leftEncoder.getPosition() + rightEncoder.getPosition()) / 2;
             dPos = currentPos = lastPos;
             theta = Math.toRadians(getBoundAngle());
             x = dPos * Math.cos(theta);
@@ -90,33 +98,30 @@ public class Drivetrain extends SubsystemBase {
 
     //Drive Modes
     public void setVelocity(double zoom, double nyoom) {
-        mRightA.set(cancel * (-nyoom - zoom));
-        mLeftA.set(cancel * (nyoom - zoom));
-        //System.out.println("power");
+        mLeftA.set(cancel * (-nyoom - zoom));
+        mRightA.set(cancel * (nyoom - zoom));
     }
 
     public void setVelPID(double zoom, double nyoom) {
-        mRightA.getPIDController().setReference(cancel * 15 * Units.fps2RPM(-nyoom - zoom), ControlType.kVelocity, 0);
-        mLeftA.getPIDController().setReference(cancel * 15 * Units.fps2RPM(nyoom - zoom), ControlType.kVelocity, 0);
+        mLeftA.getPIDController().setReference(cancel * 15 * Units.fps2RPM(-nyoom - zoom), ControlType.kVelocity, 0);
+        mRightA.getPIDController().setReference(cancel * 15 * Units.fps2RPM(nyoom - zoom), ControlType.kVelocity, 0);
     }
 
     public void setClimbSpeed(double speed) {
-        mRightA.set(speed);
         mLeftA.set(speed);
+        mRightA.set(speed);
     }
 
     public double[] getDrivePos() {
-        double[] xd = { rightEncoder.getPosition(), leftEncoder.getPosition() };
-        return xd;
+        return new double[]{ leftEncoder.getPosition(), rightEncoder.getPosition() };
     }
 
     public double getAveragePos() {
-        return ( rightEncoder.getPosition() + leftEncoder.getPosition() ) / 2;
+        return ( leftEncoder.getPosition() + rightEncoder.getPosition() ) / 2;
     }
 
     public double[] getDriveVel() {
-        double[] xd = { rightEncoder.getVelocity(), leftEncoder.getVelocity() };
-        return xd;
+        return new double[]{ leftEncoder.getVelocity(), rightEncoder.getVelocity() };
     }
 
     //True programming
@@ -126,8 +131,8 @@ public class Drivetrain extends SubsystemBase {
     
     //Ramsete
     public void ramseteInput(Double left, Double right) {
-        mRightA.setVoltage(left);
-        mLeftA.setVoltage(right);
+        mLeftA.setVoltage(left);
+        mRightA.setVoltage(right);
     }
 
     @FunctionalInterface
@@ -140,13 +145,13 @@ public class Drivetrain extends SubsystemBase {
     }
 
     public double getPos() {
-        return (rightEncoder.getPosition() + leftEncoder.getPosition()) / 2;
+        return (leftEncoder.getPosition() + rightEncoder.getPosition()) / 2;
     }
 
     
     public DifferentialDriveWheelSpeeds getWheelSpeeds() {
-        return new DifferentialDriveWheelSpeeds(Units.rpm2MPS(rightEncoder.getVelocity()),
-                                                Units.rpm2MPS(leftEncoder.getVelocity()));
+        return new DifferentialDriveWheelSpeeds(Units.rpm2MPS(leftEncoder.getVelocity()),
+                                                Units.rpm2MPS(rightEncoder.getVelocity()));
     }
 
     @FunctionalInterface
@@ -154,25 +159,25 @@ public class Drivetrain extends SubsystemBase {
         DifferentialDriveWheelSpeeds getWheelSpeeds();
     }
     public DifferentialDriveWheelSpeeds getweeeee() {
-        return new DifferentialDriveWheelSpeeds(Units.rpm2MPS(rightEncoder.getVelocity()),
-                                                Units.rpm2MPS(leftEncoder.getVelocity()));
+        return new DifferentialDriveWheelSpeeds(Units.rpm2MPS(leftEncoder.getVelocity()),
+                                                Units.rpm2MPS(rightEncoder.getVelocity()));
     }
 
     //Climber
-    public void shiftPTO(DoubleSolenoid.Value val) { //1: Forward, 2: Off, 3: Reverse
-        ptoShifter.set(val);
-        if (val == Value.kForward) {
-            cancel = 0;
-        } else {
-            cancel = 1;
-        }
+    public void shiftPTO(boolean on) { //1: Forward, 2: Off, 3: Reverse
+        ptoShifter.set(on);
+        //if (on) {
+        //    cancel = 0;
+        //}else {
+        //    cancel = 1;
+        //}
     }
 
     public void shiftClimbHook(boolean on) {
         climbHook.set(on);
     }
 
-    public Value getPTO() {
+    public boolean getPTO() {
         return ptoShifter.get();
     }
 
@@ -182,7 +187,7 @@ public class Drivetrain extends SubsystemBase {
 
     //Gyroscope
     public double getGyro() {
-        return gyro.getAngle();
+        return -gyro.getAngle();
     }
 
     public void zeroGyro() {

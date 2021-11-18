@@ -12,7 +12,7 @@ public class TargetedShot extends CommandBase {
     double power, shotPower;
     Target t;
 
-    public TargetedShot(Shooter kShooter, Limelight kLimelight, double shotPower ,double idlePower) {
+    public TargetedShot(Shooter kShooter, Limelight kLimelight, double shotPower, double idlePower) {
         this.kShooter = kShooter;
         this.kLimelight = kLimelight;
         this.shotPower = shotPower;
@@ -28,7 +28,7 @@ public class TargetedShot extends CommandBase {
     public void execute() {
         t = kLimelight.getTarget();
         //kShooter.setKicker(0.75);
-        if ((t.area > 0.05) && (Math.abs(t.yaw) < 0.5)) {
+        if ((t.area > 0.05) && (Math.abs(t.yaw) < 0.65)) {
             kShooter.setShootVel(shotPower);
         }
         kShooter.setHood(Units.target2Hood(t.area, t.pitch));

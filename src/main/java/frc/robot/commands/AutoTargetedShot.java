@@ -1,7 +1,6 @@
 package frc.robot.commands;
 
 import edu.wpi.first.wpilibj2.command.CommandBase;
-import frc.robot.Constants;
 import frc.robot.subsystems.Feeder;
 import frc.robot.subsystems.Limelight;
 import frc.robot.subsystems.Shooter;
@@ -26,27 +25,26 @@ public class AutoTargetedShot extends CommandBase {
 
     @Override
     public void initialize() {
-        kShooter.setShootVel(power);
+        kShooter.setShooter(power);
     }
 
     @Override
     public void execute() {
         t = kLimelight.getTarget();
-        kShooter.setKicker(0.4);
-        if ((t.area > 0.05) && (Math.abs(t.yaw) < 0.5)) {
-            kShooter.setShootVel(Constants.bulletShot);
+        if ((t.area > 0.05) && (Math.abs(t.yaw) < 0.65)) {
+            kShooter.setShootVel(shotPower);
         }
         kShooter.setHood(Units.target2Hood(t.area, t.pitch));
-        if (Math.abs(kShooter.getShootSpeed() - shotPower) < 50) {
-            kFeeder.powerFront(0.75);
-            kFeeder.powerBackBelt(0.75);
-            kFeeder.powerVertical(0.5);
+        if (kShooter.isReady(2800)) {
+            kFeeder.powerFront(0.4);
+            kFeeder.powerBackBelt(0.5);
+            kShooter.setKicker(1.0);
         }
     }
 
     @Override
     public void end(boolean interrupted) {
-        kShooter.setShootVel(power);
+        kShooter.setShooter(power);
         kShooter.setKicker(0.0);
         kFeeder.powerFront(0.0);
         kFeeder.powerBackBelt(0.0);

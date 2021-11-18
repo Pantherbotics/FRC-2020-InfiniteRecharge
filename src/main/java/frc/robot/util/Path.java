@@ -3,10 +3,11 @@ package frc.robot.util;
 import java.util.HashMap;
 import edu.wpi.first.wpilibj2.command.Command;
 
+@SuppressWarnings("unused")
 public class Path {
 
-    private String name;
-    private HashMap<Double, Command> comms;
+    private final String name;
+    private final HashMap<Double, Command> comms;
 
     public Path(String name, HashMap<Double, Command> comms) {
         this.name = name;

@@ -10,6 +10,7 @@ package frc.robot;
 import edu.wpi.first.wpilibj.controller.SimpleMotorFeedforward;
 import edu.wpi.first.wpilibj.kinematics.DifferentialDriveKinematics;
 
+@SuppressWarnings("unused")
 public final class Constants {
 
     //Joystick
@@ -22,10 +23,10 @@ public final class Constants {
     public static final double deadband = 0.05;
     
     //Talon IDs
-    public static final int rightDriveAID = 13;
-    public static final int rightDriveBID = 14;
-    public static final int leftDriveAID = 2;
-    public static final int leftDriveBID = 1;
+    public static final int leftDriveAID = 13;
+    public static final int leftDriveBID = 14;
+    public static final int rightDriveAID = 2;
+    public static final int rightDriveBID = 1;
     public static final int rollerID = 6;
     public static final int vertRollersID = 10;
     public static final int frontBotRollersID = 5;
@@ -37,21 +38,22 @@ public final class Constants {
     public static final int ppID = 9;
 
     //Solenoid IDs
-    public static final int ptoForwardID = 1;
-    public static final int ptoReverseID = 0;
+    //public static final int ptoForwardID = 1;
+    //public static final int ptoReverseID = 0;
+    public static final int ptoShifterID = 0;
     public static final int climbHookID = 4;
     public static final int intakeMainID = 2;
     public static final int intakeSubID = 3;
 
     //Drivetrain
-    public static final double driveP = 0.00001;
+    public static final double driveP = 0.125;
     public static final double driveI = 0.0;
-    public static final double driveD = 0.0;
+    public static final double driveD = 0.25;
     public static final double driveFF = 0.0;
-    public static final double driveMaxVel = 0.5; //0.196850m wheel diameter
-    public static final double driveMaxAccel = 0.5;
-    public static final SimpleMotorFeedforward driveSimpleFF = new SimpleMotorFeedforward(0.279, 2.62, 0.42);
-    public static final DifferentialDriveKinematics dKinematics = new DifferentialDriveKinematics(0.6455447508046545);
+    public static final double driveMaxVel = 3.6576;
+    public static final double driveMaxAccel = 2.4384;
+    public static final SimpleMotorFeedforward driveSimpleFF = new SimpleMotorFeedforward(0.279, 0.0686, 0.014);
+    public static final DifferentialDriveKinematics dKinematics = new DifferentialDriveKinematics(0.5842);
 
     //Climber
     public static final double climbP = 0.5;
@@ -80,7 +82,7 @@ public final class Constants {
     public static final double aimbotP = 0.15;
     public static final double aimbotD = 2.0;
     public static final double aimbotMax = 0.25;
-    public static final double bulletShot = 3000.0;
+    public static final double bulletShot = 3350.0;
 
     //Ramsete
     public static final double ramseteB = 2.0;
